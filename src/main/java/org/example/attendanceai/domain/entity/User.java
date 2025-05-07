@@ -10,15 +10,19 @@ import lombok.NoArgsConstructor;
 import org.example.attendanceai.domain.enums.UserRoles;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -47,6 +51,36 @@ public class User {
 
     @UpdateTimestamp
     LocalDateTime updatedAt;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !archived;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !archived;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !archived;
+    }
 }
 
 

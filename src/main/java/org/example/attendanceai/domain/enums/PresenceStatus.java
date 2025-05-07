@@ -1,5 +1,5 @@
 package org.example.attendanceai.domain.enums;
 
 public enum PresenceStatus {
-    present, absent, justifiedAbsence
+    PRESENT, ABSENT, JUSTIFIED_ABSENCE
 }
