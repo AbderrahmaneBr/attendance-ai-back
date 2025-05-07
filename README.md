@@ -11,6 +11,7 @@ src/main/java/com/yourcompany/presencemanagement/
 │   ├── security/              # Security configurations
 │   └── swagger/               # API documentation
 ├── domain/                    # Domain model
+│   ├── enums/                 # Enumerations
 │   ├── entity/                # JPA entities
 │   ├── repository/            # Spring Data repositories
 │   └── mapper/                # Entity-DTO mappers
