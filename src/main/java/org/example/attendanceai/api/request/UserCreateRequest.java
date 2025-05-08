@@ -24,5 +24,4 @@ public class UserCreateRequest {
 
     private String profileImg;  // Nullable (optional)
 
-    private String role; // Or use enum: UserRoles role
 }
