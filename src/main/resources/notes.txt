@@ -1,0 +1,3 @@
+- TO DO LATER
+- Make api/v1/auth/register endpoint accessible by ADMINS only
+- Make Error Messages Self-explanatory

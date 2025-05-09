@@ -8,8 +8,12 @@ import org.example.attendanceai.domain.enums.UserRoles;
 import org.example.attendanceai.domain.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +35,12 @@ public class AuthenticationService {
                 .role(UserRoles.TEACHER)
                 .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
+        var jwtToken = jwtService.generateToken(extraClaims, user);
         return new AuthenticationResponse(jwtToken);
     }
 
@@ -42,8 +51,12 @@ public class AuthenticationService {
 
         // User not found
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-
-        var jwtToken = jwtService.generateToken(user);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
+        var jwtToken = jwtService.generateToken(extraClaims, user);
         return new AuthenticationResponse(jwtToken);
     }
 }

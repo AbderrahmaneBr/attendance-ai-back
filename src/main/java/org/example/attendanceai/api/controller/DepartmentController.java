@@ -4,21 +4,26 @@ package org.example.attendanceai.api.controller;
 import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.example.attendanceai.api.request.DepartmentRequest;
 import org.example.attendanceai.domain.entity.Department;
+import org.example.attendanceai.domain.entity.User;
 import org.example.attendanceai.services.DepartmentService;
+import org.example.attendanceai.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/departments")
+@RequestMapping("/api/v1/departments")
 @RequiredArgsConstructor
 public class DepartmentController {
 
         private final DepartmentService departmentService;
+        private final UserService userService;
 
         @GetMapping
         public ResponseEntity<List<Department>> getAllDepartments() {
@@ -32,9 +37,16 @@ public class DepartmentController {
 
         @PostMapping
         @PreAuthorize("hasRole('ADMIN')")
-        public ResponseEntity<Department> createDepartment(@Valid @RequestBody Department department) {
-                Department departmentS = departmentService.save(department);
-                return ResponseEntity.status(HttpStatus.CREATED).body(departmentS);
+        public ResponseEntity<Department> createDepartment(@Valid @RequestBody DepartmentRequest request) {
+                User chief = userService.findById(request.getChiefId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chief not found"));
+
+                Department department = new Department();
+                department.setName(request.getName());
+                department.setChief(chief);
+
+                Department savedDepartment = departmentService.save(department);
+                return ResponseEntity.status(HttpStatus.CREATED).body(savedDepartment);
         }
 
         @PutMapping("/{id}")

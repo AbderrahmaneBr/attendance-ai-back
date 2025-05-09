@@ -43,6 +43,7 @@ public class StudentServiceImpl implements StudentService {
         }
 
         @Override
+        @Transactional
         public Optional<Student> update(long id, Student studentDetails) {
             return studentRepository.findById(id).map(existingStudent -> {
                 // Update fields
@@ -58,12 +59,17 @@ public class StudentServiceImpl implements StudentService {
                 if (studentDetails.getProfile_img() != null) {
                     existingStudent.setProfile_img(studentDetails.getProfile_img());
                 }
+                if (studentDetails.getArchived() != null) {
+                    existingStudent.setArchived(studentDetails.getArchived());
+                }
+
                 //TODO : ajout de la modification pour les autres champs de USER entities a abderahmane hhh
                 return studentRepository.save(existingStudent);
             });
         }
 
         @Override
+        @Transactional
         public boolean deleteById(long id) {
             if (studentRepository.existsById(id)) {
                 studentRepository.deleteById(id);
@@ -73,6 +79,7 @@ public class StudentServiceImpl implements StudentService {
         }
 
         @Override
+        @Transactional
         public Optional<Student> archive(long id) {
             return studentRepository.findById(id).map(student -> {
                 student.setArchived(true);
@@ -81,6 +88,7 @@ public class StudentServiceImpl implements StudentService {
         }
 
         @Override
+        @Transactional
         public Optional<Student> unarchive(long id) {
             return studentRepository.findById(id).map(student -> {
                 student.setArchived(false);
