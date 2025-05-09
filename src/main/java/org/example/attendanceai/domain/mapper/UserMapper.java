@@ -10,3 +10,4 @@ public interface UserMapper {
     User toEntity(UserResponse request);
 }
 
+// TODO : Mapper DTO of other ENTITY
