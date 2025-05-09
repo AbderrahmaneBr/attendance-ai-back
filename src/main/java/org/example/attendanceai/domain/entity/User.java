@@ -33,6 +33,8 @@ public class User implements UserDetails {
     String firstname;
     @NotNull
     String lastname;
+
+    @Column(unique = true)
     @NotNull
     String email;
     @NotNull

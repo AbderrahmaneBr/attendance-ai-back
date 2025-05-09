@@ -22,6 +22,7 @@ public class Department {
     long id;
 
     @NotNull
+    @Column(unique = true)
     String name;
 
     @OneToOne

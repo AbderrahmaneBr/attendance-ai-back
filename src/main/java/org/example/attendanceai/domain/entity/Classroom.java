@@ -22,6 +22,7 @@ public class Classroom {
     long id;
 
     @NotNull
+    @Column(unique = true)
     String name;
 
     @ManyToOne

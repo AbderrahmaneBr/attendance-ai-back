@@ -28,8 +28,10 @@ public class Student {
     @NotNull
     String lastname;
     @NotNull
+    @Column(unique = true)
     String email;
     @Nullable
+    @Column(unique = true)
     String phone;
     @Nullable
     String address;
