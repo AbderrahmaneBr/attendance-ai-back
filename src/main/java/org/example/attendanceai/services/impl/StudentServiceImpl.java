@@ -7,12 +7,13 @@ import org.example.attendanceai.services.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
 
-
+//Todo ajout anotation to methods (GETMAPPING)
 @Service
 @Transactional
 public class StudentServiceImpl implements StudentService {
@@ -93,10 +94,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> findByCneId(@PathVariable long cneId) {
+    @GetMapping("/students/by-cne-id/{cne_id}")
+    public Optional<Student> findByCneId(@PathVariable("cne_id") long cneId) {
         return studentRepository.findByCneId(cneId);
-
-            }
+    }
 
             //Todo a revoir ????
 //    @Override

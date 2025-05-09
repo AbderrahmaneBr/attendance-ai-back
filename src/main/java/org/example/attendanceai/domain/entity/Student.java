@@ -41,8 +41,9 @@ public class Student {
     @JoinColumn(name = "major_id")
     Major major;
 
+    //Todo abdo modified this to cneId
     @Column(unique = true)
-    long cne_id;
+    long cneId;
 
     @Enumerated(EnumType.STRING)
     StudyYear study_year;

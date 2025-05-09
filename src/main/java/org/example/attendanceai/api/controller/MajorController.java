@@ -33,14 +33,14 @@ public class MajorController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Major> createMajor(@Valid @RequestBody Major major) {
         Major majorS = majorService.save(major);
         return ResponseEntity.status(HttpStatus.CREATED).body(majorS);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Major> updateMajor(
             @PathVariable long id,
             @Valid @RequestBody Major major) {
