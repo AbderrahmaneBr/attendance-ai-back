@@ -12,9 +12,9 @@ public interface UserService {
 
     Optional<User> findById(long id);
 
-    User save(User user);
-
-    Optional<User> update(long id, User user);
+//    User save(User user);
+//
+//    Optional<User> update(long id, User user);
 
     boolean deleteById(long id);
 
@@ -24,4 +24,10 @@ public interface UserService {
 
     List<User> findByRole(UserRoles role);
 
-}
+    Optional<User> findByEmail(String email);
+
+    Optional<User> promoteToTeacher(Long userId);
+
+    Optional<User> revokeTeacherRole(Long userId) ;
+
+    }

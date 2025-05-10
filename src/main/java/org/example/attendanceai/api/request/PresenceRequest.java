@@ -10,7 +10,7 @@ import lombok.Builder;
 import org.example.attendanceai.domain.enums.PresenceStatus;
 
 @Builder
-public class PresenceRequest {
+public class  PresenceRequest {
 
     @NotNull(message = "Student ID is required")
     private Long studentId;

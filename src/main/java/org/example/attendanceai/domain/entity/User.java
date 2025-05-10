@@ -43,6 +43,7 @@ public class User implements UserDetails {
     @Nullable
     String profile_img;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
     UserRoles role;
 
@@ -96,6 +97,9 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return !archived;
     }
+
+
+
 }
 
 

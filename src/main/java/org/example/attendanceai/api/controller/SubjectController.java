@@ -3,6 +3,8 @@ package org.example.attendanceai.api.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.attendanceai.api.request.SubjectRequest;
+import org.example.attendanceai.api.response.SubjectResponse;
 import org.example.attendanceai.domain.entity.Subject;
 import org.example.attendanceai.services.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +36,20 @@ public class SubjectController {
     }
 //todo a modifier apres ajout drs dto
 
-//    @PostMapping
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<Subject> createSubject(@Valid @RequestBody SubjectDTO subjectDTO) {
-//        Subject subject = subjectService.save(subjectDTO);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(subject);
-//    }
-//
-//    @PutMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF') or @subjectService.isTeacher(#id, authentication.principal.id)")
-//    public ResponseEntity<Subject> updateSubject(
-//            @PathVariable long id,
-//            @Valid @RequestBody SubjectDTO subjectDTO) {
-//        return subjectService.update(id, subjectDTO)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SubjectResponse> createSubject(@Valid @RequestBody SubjectRequest request) {
+        Subject subject = subjectService.save(request);
+        SubjectResponse response = subjectService.toResponse(subject);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN') or @subjectService.isTeacher(#id, authentication.principal.id)")
+    public ResponseEntity<SubjectResponse> updateSubject(@PathVariable Long id, @Valid @RequestBody SubjectRequest request) {
+        SubjectResponse response = subjectService.updateSubject(id, request);
+        return ResponseEntity.ok(response);
+    }
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteSubject(@PathVariable long id) {

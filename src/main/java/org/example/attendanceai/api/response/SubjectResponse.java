@@ -14,4 +14,5 @@ public class SubjectResponse {
     Boolean archived;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
 }

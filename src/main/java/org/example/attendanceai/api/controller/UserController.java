@@ -2,6 +2,7 @@ package org.example.attendanceai.api.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.attendanceai.api.request.UserRequest;
 import org.example.attendanceai.domain.entity.User;
 import org.example.attendanceai.domain.enums.UserRoles;
 import org.example.attendanceai.services.UserService;
@@ -38,23 +39,23 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateDTO userDTO) {
-        User user = userService.save(userDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }
-
-
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-    public ResponseEntity<User> updateUser(
-            @PathVariable long id,
-            @Valid @RequestBody UserUpdateDTO userDTO) {
-        return userService.update(id, userDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+//    @PostMapping
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<User> createUser(@Valid @RequestBody UserRequest userDTO) {
+//        User user = userService.save(userDTO);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+//    }
+//
+//
+//    @PutMapping("/{id}")
+//    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+//    public ResponseEntity<User> updateUser(
+//            @PathVariable long id,
+//            @Valid @RequestBody UserRequest userDTO) {
+//        return userService.update(id, userDTO)
+//                .map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.notFound().build());
+//    }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -88,23 +89,27 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(
-            Authentication authentication,
-            @Valid @RequestBody PasswordChangeDTO passwordChangeDTO) {
-        String username = authentication.getName();
-        boolean success = userService.changePassword(username, passwordChangeDTO);
-
-        if (success) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
     @GetMapping("/profile")
     public ResponseEntity<User> getCurrentUserProfile(Authentication authentication) {
         String username = authentication.getName();
         return userService.findByEmail(username)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @PutMapping("/{id}/promote-to-teacher")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> promoteToTeacher(@PathVariable Long id) {
+        return userService.promoteToTeacher(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/revoke-teacher")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> revokeTeacher(@PathVariable Long id) {
+        return userService.revokeTeacherRole(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

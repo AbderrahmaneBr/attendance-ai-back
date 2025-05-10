@@ -1,9 +1,15 @@
 package org.example.attendanceai.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.attendanceai.api.request.SubjectRequest;
+
+import org.example.attendanceai.api.response.SubjectResponse;
 import org.example.attendanceai.domain.entity.Subject;
+import org.example.attendanceai.domain.entity.Teacher;
 import org.example.attendanceai.domain.entity.User;
+import org.example.attendanceai.domain.mapper.SubjectMapper;
 import org.example.attendanceai.domain.repository.SubjectRepository;
+import org.example.attendanceai.domain.repository.TeacherRepository;
 import org.example.attendanceai.domain.repository.UserRepository;
 import org.example.attendanceai.services.SubjectService;
 import org.slf4j.Logger;
@@ -11,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +28,11 @@ public class SubjectServiceImpl implements SubjectService {
 
     private static final Logger logger = LoggerFactory.getLogger(SubjectServiceImpl.class);
 
+    private final SubjectMapper subjectMapper;
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
+    private final TeacherRepository teacherRepository;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -38,49 +48,86 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectRepository.findById(id);
     }
 
-    //todo a corriger apres ajout des dto
+
 //    @Override
 //    @Transactional
-//    public Subject save(SubjectDTO subjectDTO) {
-//        logger.debug("Saving new subject: {}", subjectDTO);
-//
-//        // Get the teacher from the repository
-//        User teacher = userRepository.findById(subjectDTO.getTeacherId())
-//                .orElseThrow(() -> new ResourceNotFoundException(
-//                        "Teacher not found with id: " + subjectDTO.getTeacherId()));
-//
+//    public Subject save(SubjectRequest request) {
 //        Subject subject = new Subject();
-//        subject.setName(subjectDTO.getName());
-//        subject.setDescription(subjectDTO.getDescription());
-//        subject.setCredits(subjectDTO.getCredits());
-//        subject.setTeacher(teacher);
-//        subject.setSemester(subjectDTO.getSemester());
-//        subject.setArchived(false); // New subjects are not archived by default
-//
+//        subject.setName(request.getName());
+//        subject.setTeacher(
+//                teacherRepository.findById(request.getTeacher().getId())
+//                        .orElseThrow(() -> new RuntimeException("Teacher not found"))
+//        );
+//        subject.setArchived(false);
 //        return subjectRepository.save(subject);
 //    }
+
+    @Override
+    public SubjectResponse toResponse(Subject subject) {
+        return subjectMapper.toResponse(subject);
+    }
+    @Override
+    @Transactional
+    public Subject save(SubjectRequest request) {
+        Subject subject = subjectMapper.toEntity(request);
+        subject.setArchived(false);
+        subject.setCreatedAt(LocalDateTime.now());
+        subject.setUpdatedAt(LocalDateTime.now());
+
+        if (request.getTeacher() != null) {
+            Teacher teacher = teacherRepository.findById(request.getTeacher().getId())
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            subject.setTeacher(teacher);
+        }
+
+        Subject savedSubject = subjectRepository.save(subject);
+        return savedSubject;
+    }
+
+//@Override
+//@Transactional
+//public Optional<SubjectResponse> update(long id, SubjectRequest request) {
+//    return subjectRepository.findById(id).map(subject -> {
+//        subject.setName(request.getName());
+//        subject.setArchived(request.getArchived());
+//        subject.setUpdatedAt(LocalDateTime.now());
 //
-//    @Override
-//    @Transactional
-//    public Optional<Subject> update(long id, SubjectDTO subjectDTO) {
-//        logger.debug("Updating subject with id: {}", id);
+//        if (request.getTeacher() != null) {
+//            Long teacherId = request.getTeacher().getId();
+//            Teacher teacher = teacherRepository.findById(teacherId)
+//                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+//            subject.setTeacher(teacher);
+//        }
 //
-//        return subjectRepository.findById(id)
-//                .map(existingSubject -> {
-//                    // Get the teacher from the repository
-//                    User teacher = userRepository.findById(subjectDTO.getTeacherId())
-//                            .orElseThrow(() -> new ResourceNotFoundException(
-//                                    "Teacher not found with id: " + subjectDTO.getTeacherId()));
-//
-//                    existingSubject.setName(subjectDTO.getName());
-//                    existingSubject.setDescription(subjectDTO.getDescription());
-//                    existingSubject.setCredits(subjectDTO.getCredits());
-//                    existingSubject.setTeacher(teacher);
-//                    existingSubject.setSemester(subjectDTO.getSemester());
-//
-//                    return subjectRepository.save(existingSubject);
-//                });
-//    }
+//        Subject saved = subjectRepository.save(subject);
+//        return subjectMapper.toResponse(saved);
+//    });
+//}
+
+    @Override
+    public SubjectResponse updateSubject(Long id, SubjectRequest request) {
+        // Fetch the existing subject by ID
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
+
+        // Update the subject
+        subject.setName(request.getName());
+        subject.setArchived(request.getArchived());
+        subject.setUpdatedAt(LocalDateTime.now());
+
+        // If the teacher exists, update the teacher relationship
+        if (request.getTeacher() != null) {
+            Teacher teacher = teacherRepository.findById(request.getTeacher().getId())
+                    .orElseThrow(() -> new RuntimeException("Teacher not found"));
+            subject.setTeacher(teacher);
+        }
+
+        // Save the updated subject
+        Subject savedSubject = subjectRepository.save(subject);
+
+        // Convert to response and return
+        return subjectMapper.toResponse(savedSubject);
+    }
 
     @Override
     @Transactional
@@ -143,5 +190,9 @@ public class SubjectServiceImpl implements SubjectService {
                 .map(subject -> subject.getTeacher() != null && subject.getTeacher().getId() == userId)
                 .orElse(false);
     }
+
+
+
+
 
 }

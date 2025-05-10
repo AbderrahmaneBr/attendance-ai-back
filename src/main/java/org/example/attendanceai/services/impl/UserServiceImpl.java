@@ -1,8 +1,10 @@
 package org.example.attendanceai.services.impl;
 
 import org.example.attendanceai.domain.entity.Student;
+import org.example.attendanceai.domain.entity.Teacher;
 import org.example.attendanceai.domain.entity.User;
 import org.example.attendanceai.domain.enums.UserRoles;
+import org.example.attendanceai.domain.repository.TeacherRepository;
 import org.example.attendanceai.domain.repository.UserRepository;
 import org.example.attendanceai.services.UserService;
 import org.slf4j.Logger;
@@ -21,15 +23,20 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private final UserRepository userRepository;
+    private final TeacherRepository teacherRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, TeacherRepository teacherRepository) {
+        this.userRepository = userRepository;
+        this.teacherRepository = teacherRepository;
+    }
 
 //Todo assk abdo if he has already add this into pom.xml
 
 //    @Autowired
 //    private PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -41,39 +48,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Optional<User> findById(long id) {
         return userRepository.findById(id);
-    }
-
-    @Override
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public Optional<User> update(long id, User userDetails) {
-        return userRepository.findById(id).map(existingUser -> {
-            // Update fields
-            if (userDetails.getFirstname() != null) {
-                existingUser.setFirstname(userDetails.getFirstname());
-            }
-            if (userDetails.getLastname() != null) {
-                existingUser.setLastname(userDetails.getLastname());
-            }
-            if (userDetails.getEmail() != null) {
-                existingUser.setEmail(userDetails.getEmail());
-            }
-            if (userDetails.getProfile_img() != null) {
-                existingUser.setProfile_img(userDetails.getProfile_img());
-            }
-            if (userDetails.getRole() != null) {
-                existingUser.setRole(userDetails.getRole());
-            }
-            if (userDetails.getArchived() != null) {
-                existingUser.setArchived(userDetails.getArchived());
-            }
-
-            return userRepository.save(existingUser);
-        });
     }
 
     @Override
@@ -123,19 +97,14 @@ public class UserServiceImpl implements UserService {
         return matchingUsers;
     }
 
-//    public User findByUsername(String username) {
-//        if (username == null) {
-//            throw new IllegalArgumentException("Username cannot be null");
-//        }
-//
-//    }
+
 public User findByUsername(String username) {
     if (username == null || username.isEmpty()) {
         return null;
     }
 
     try {
-        return userRepository.findByUsername(username)
+        return userRepository.findByEmail(username)
                 .orElse(null);
     } catch (Exception e) {
         logger.error("Error finding user by username: " + username, e);
@@ -143,38 +112,60 @@ public User findByUsername(String username) {
     }
 }
 
-//Todo change this dto into request
-    public boolean changePassword(String username, PasswordChangeDTO passwordChangeDTO) {
-        // Input validation
-        if (username == null || username.isEmpty() || passwordChangeDTO == null) {
-            return false;
+public Optional<User> findByEmail(String email){
+    if (email == null || email.isEmpty()) {
+        logger.error("Email empty: " + email);
+        return null;
+    }
+
+    try {
+        return userRepository.findByEmail(email);
+
+    } catch (Exception e) {
+        logger.error("Error finding user by email: " + email, e);
+        return null;
+    }
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> promoteToTeacher(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (teacherRepository.existsByUser(user)) {
+            return Optional.of(user);
         }
 
-        // Find the user by username
-        User user = findByUsername(username);
-        if (user == null) {
-            return false; // User not found
-        }
+        Teacher teacher = new Teacher();
+        teacher.setUser(user);
 
-        // Verify the current password is correct
-        if (!passwordEncoder.matches(passwordChangeDTO.getCurrentPassword(), user.getPassword())) {
-            return false; // Current password is incorrect
-        }
+        teacherRepository.save(teacher);
 
-        // Validate new password (you can add more validation rules)
-        if (passwordChangeDTO.getNewPassword() == null ||
-                passwordChangeDTO.getNewPassword().isEmpty() ||
-                passwordChangeDTO.getNewPassword().length() < 8) {
-            return false; // New password doesn't meet requirements
-        }
 
-        // Encode the new password and save it
-        String encodedPassword = passwordEncoder.encode(passwordChangeDTO.getNewPassword());
-        user.setPassword(encodedPassword);
-
-        // Save the updated user
         userRepository.save(user);
 
-        return true;
+        return Optional.of(user);
     }
+
+    public Optional<User> revokeTeacherRole(Long userId) {
+        // Fetch the user by userId
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Teacher teacher = teacherRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Teacher role not found"));
+
+        teacherRepository.delete(teacher);
+
+
+        userRepository.save(user);
+
+        return Optional.of(user);
+    }
+
+
+
+
+
 }
