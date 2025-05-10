@@ -18,7 +18,7 @@ public class PresenceRequest {
     @NotNull(message = "Session ID is required")
     private Long sessionId;
 
-    @NotBlank(message = "Presence Status is required")
+    @NotNull(message = "Presence Status is required")
     @Enumerated(EnumType.STRING)
     private PresenceStatus status;
 

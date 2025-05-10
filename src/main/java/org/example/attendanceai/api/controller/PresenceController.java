@@ -3,6 +3,7 @@ package org.example.attendanceai.api.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.attendanceai.api.request.MajorRequest;
+import org.example.attendanceai.api.request.PresenceRequest;
 import org.example.attendanceai.api.response.MajorResponse;
 import org.example.attendanceai.api.response.PresenceResponse;
 import org.example.attendanceai.services.MajorService;
@@ -26,59 +27,53 @@ public class PresenceController {
     public ResponseEntity<List<PresenceResponse>> getAllPresence() {
         return ResponseEntity.ok(presenceService.findAll());
     }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<MajorResponse> getMajorById(@PathVariable long id) {
-//        return majorService.findById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @PostMapping
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PresenceResponse> getPresenceById(@PathVariable long id) {
+        return presenceService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<MajorResponse> createMajor(@Valid @RequestBody MajorRequest request) {
-//        MajorResponse response = majorService.save(request);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-//    }
-//
-//    @PatchMapping("/{id}")
+    public ResponseEntity<PresenceResponse> createPresence(@Valid @RequestBody PresenceRequest request) {
+        PresenceResponse response = presenceService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/{id}")
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<MajorResponse> updateMajor(
-//            @PathVariable long id,
-//            @Valid @RequestBody MajorRequest request) {
-//        return majorService.update(id, request)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @DeleteMapping("/{id}")
+    public ResponseEntity<PresenceResponse> updatePresence(
+            @PathVariable long id,
+            @Valid @RequestBody PresenceRequest request) {
+        return presenceService.update(id, request)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<Void> deletePresence(@PathVariable long id) {
+        if (presenceService.deleteById(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{id}/archive")
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<Void> deleteMajor(@PathVariable long id) {
-//        if (majorService.deleteById(id)) {
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    @PatchMapping("/{id}/archive")
+    public ResponseEntity<PresenceResponse> archivePresence(@PathVariable long id) {
+        return presenceService.archive(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}/unarchive")
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<MajorResponse> archiveMajor(@PathVariable long id) {
-//        return majorService.archive(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @PatchMapping("/{id}/unarchive")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<MajorResponse> unarchiveMajor(@PathVariable long id) {
-//        return majorService.unarchive(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @GetMapping("/department/{departmentId}")
-//    public ResponseEntity<Optional<MajorResponse>> getMajorsByDepartmentId(@PathVariable long departmentId) {
-//        Optional<MajorResponse> response = majorService.findByDepartmentId(departmentId);
-//        return ResponseEntity.ok(response);
-//    }
+    public ResponseEntity<PresenceResponse> unarchiveMajor(@PathVariable long id) {
+        return presenceService.unarchive(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

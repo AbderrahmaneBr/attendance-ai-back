@@ -11,6 +11,7 @@ public class PresenceResponse {
     long id;
     StudentResponse student;
     SessionResponse session;
+    String status;
     Boolean archived;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.attendanceai.domain.enums.PresenceStatus;
+import org.example.attendanceai.util.GenericEnumConverter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -37,7 +38,6 @@ public class Presence {
     String description;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     PresenceStatus status;
 
     @Builder.Default

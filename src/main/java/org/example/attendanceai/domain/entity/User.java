@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.attendanceai.domain.enums.UserRoles;
-import org.example.attendanceai.util.UserRolesConverter;
+import org.example.attendanceai.util.GenericEnumConverter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,7 +44,6 @@ public class User implements UserDetails {
     String profile_img;
 
     @NotNull
-    @Convert(converter = UserRolesConverter.class)
     UserRoles role;
 
     @Builder.Default

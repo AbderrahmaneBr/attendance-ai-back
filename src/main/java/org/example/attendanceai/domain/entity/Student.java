@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.attendanceai.domain.enums.StudyYear;
+import org.example.attendanceai.util.GenericEnumConverter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -49,7 +50,6 @@ public class Student {
     long cneId;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     StudyYear study_year;
 
     @Builder.Default
