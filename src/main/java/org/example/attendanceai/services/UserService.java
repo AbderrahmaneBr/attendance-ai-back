@@ -2,6 +2,7 @@ package org.example.attendanceai.services;
 
 import org.example.attendanceai.domain.entity.Major;
 import org.example.attendanceai.domain.entity.User;
+import org.example.attendanceai.domain.enums.UserRoles;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,5 +22,6 @@ public interface UserService {
 
     Optional<User> unarchive(long id);
 
+    List<User> findByRole(UserRoles role);
 
 }

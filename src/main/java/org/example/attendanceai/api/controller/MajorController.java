@@ -50,7 +50,7 @@ public class MajorController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteMajor(@PathVariable long id) {
         if (majorService.deleteById(id)) {
             return ResponseEntity.noContent().build();
@@ -59,7 +59,7 @@ public class MajorController {
     }
 
     @PatchMapping("/{id}/archive")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Major> archiveMajor(@PathVariable long id) {
         return majorService.archive(id)
                 .map(ResponseEntity::ok)
@@ -67,7 +67,7 @@ public class MajorController {
     }
 
     @PatchMapping("/{id}/unarchive")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Major> unarchiveMajor(@PathVariable long id) {
         return majorService.unarchive(id)
                 .map(ResponseEntity::ok)

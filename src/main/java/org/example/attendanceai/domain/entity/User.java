@@ -59,6 +59,17 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
+    //ajout getter setters pour firstname et lastname
+
+    public @NotNull String getFirstname() {
+        return firstname;
+    }
+
+    public @NotNull String getLastname() {
+        return lastname;
+    }
+
+
     @Override
     public String getUsername() {
         return email;

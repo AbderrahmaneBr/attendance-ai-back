@@ -11,8 +11,8 @@ import org.example.attendanceai.domain.enums.UserRoles;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private String email;
     private String password;
 }

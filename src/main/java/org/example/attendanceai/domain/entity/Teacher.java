@@ -20,4 +20,8 @@ public class Teacher {
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
+
+    public long getId() {
+        return userId;
+    }
 }

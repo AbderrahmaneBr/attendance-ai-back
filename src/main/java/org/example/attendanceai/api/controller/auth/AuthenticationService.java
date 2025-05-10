@@ -28,8 +28,8 @@ public class AuthenticationService {
         new User();
         var user = User
                 .builder()
-                .firstname(request.getFirstName())
-                .lastname(request.getLastName())
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(UserRoles.TEACHER)
