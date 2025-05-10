@@ -39,14 +39,16 @@ public class Student {
     @Nullable
     String profile_img;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "major_id")
     Major major;
 
-    //Todo abdo modified this to cneId
+    @NotNull
     @Column(unique = true)
     long cneId;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     StudyYear study_year;
 

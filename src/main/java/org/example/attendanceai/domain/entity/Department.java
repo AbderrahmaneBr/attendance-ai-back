@@ -25,6 +25,7 @@ public class Department {
     @Column(unique = true)
     String name;
 
+    @NotNull
     @OneToOne
     @JoinColumn(name = "chief_id")
     User chief;

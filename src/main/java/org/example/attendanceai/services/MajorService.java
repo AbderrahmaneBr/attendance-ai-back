@@ -1,5 +1,7 @@
 package org.example.attendanceai.services;
 
+import org.example.attendanceai.api.request.MajorRequest;
+import org.example.attendanceai.api.response.MajorResponse;
 import org.example.attendanceai.domain.entity.Major;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,20 +13,20 @@ import java.util.Optional;
 //@Transactional
 public interface MajorService {
 
-    List<Major> findAll();
+    List<MajorResponse> findAll();
 
-    Optional<Major> findById(long id);
+    Optional<MajorResponse> findById(long id);
 
-    Major save(Major major);
+    MajorResponse save(MajorRequest request);
 
-    Optional<Major> update(long id, Major major);
+    Optional<MajorResponse> update(long id, MajorRequest request);
 
     boolean deleteById(long id);
 
-    Optional<Major> archive(long id);
+    Optional<MajorResponse> archive(long id);
 
-    Optional<Major> unarchive(long id);
+    Optional<MajorResponse> unarchive(long id);
 
-    Optional<Major> findByDepartmentId(long departmentId);
+    Optional<MajorResponse> findByDepartmentId(long departmentId);
 //    Optional<Major> findByChiefId(long chiefId);}
 }

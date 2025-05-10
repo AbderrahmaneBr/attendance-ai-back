@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.attendanceai.api.request.DepartmentRequest;
+import org.example.attendanceai.api.response.DepartmentResponse;
+import org.example.attendanceai.api.response.MajorResponse;
 import org.example.attendanceai.domain.entity.Department;
 import org.example.attendanceai.domain.entity.User;
 import org.example.attendanceai.services.DepartmentService;
@@ -26,35 +28,31 @@ public class DepartmentController {
         private final UserService userService;
 
         @GetMapping
-        public ResponseEntity<List<Department>> getAllDepartments() {
+        public ResponseEntity<List<DepartmentResponse>> getAllDepartments() {
                 return ResponseEntity.ok(departmentService.findAll());
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<Department> getDepartmentById(@PathVariable long id) {
-                return ResponseEntity.ok(departmentService.findById(id));
+        public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable long id) {
+                return departmentService.findById(id).map(ResponseEntity::ok)
+                        .orElse(ResponseEntity.notFound().build());
         }
 
         @PostMapping
         @PreAuthorize("hasRole('ADMIN')")
-        public ResponseEntity<Department> createDepartment(@Valid @RequestBody DepartmentRequest request) {
-                User chief = userService.findById(request.getChiefId())
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chief not found"));
-
-                Department department = new Department();
-                department.setName(request.getName());
-                department.setChief(chief);
-
-                Department savedDepartment = departmentService.save(department);
-                return ResponseEntity.status(HttpStatus.CREATED).body(savedDepartment);
+        public ResponseEntity<DepartmentResponse> createDepartment(@Valid @RequestBody DepartmentRequest request) {
+                DepartmentResponse response = departmentService.save(request);
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
 
-        @PutMapping("/{id}")
+        @PatchMapping("/{id}")
         @PreAuthorize("hasRole('ADMIN')")
-        public ResponseEntity<Department> updateDepartment(
+        public ResponseEntity<DepartmentResponse> updateDepartment(
                 @PathVariable long id,
-                @Valid @RequestBody Department department) {
-             return    ResponseEntity.ok(departmentService.update(id, department));
+                @Valid @RequestBody DepartmentRequest request) {
+                return departmentService.update(id, request)
+                        .map(ResponseEntity::ok)
+                        .orElse(ResponseEntity.notFound().build());
         }
 
         @DeleteMapping("/{id}")
@@ -68,19 +66,19 @@ public class DepartmentController {
 
         @PatchMapping("/{id}/archive")
         @PreAuthorize("hasRole('ADMIN')")
-        public ResponseEntity<Department> archiveDepartment(@PathVariable long id) {
+        public ResponseEntity<DepartmentResponse> archiveDepartment(@PathVariable long id) {
                 return departmentService.archive(id)
                         .map(ResponseEntity::ok)
                         .orElse(ResponseEntity.notFound().build());
         }
 
-//        @PatchMapping("/{id}/unarchive")
-//        @PreAuthorize("hasRole('ADMIN')")
-//        public ResponseEntity<Department> unarchiveDepartment(@PathVariable long id) {
-//                return departmentService.unarchive(id)
-//                        .map(ResponseEntity::ok)
-//                        .orElse(ResponseEntity.notFound().build());
-//        }
+        @PatchMapping("/{id}/unarchive")
+        @PreAuthorize("hasRole('ADMIN')")
+        public ResponseEntity<DepartmentResponse> unarchiveDepartment(@PathVariable long id) {
+                return departmentService.unarchive(id)
+                        .map(ResponseEntity::ok)
+                        .orElse(ResponseEntity.notFound().build());
+        }
 //
 //        @GetMapping("/chief/{chiefId}")
 //        public ResponseEntity<Department> getDepartmentByChiefId(@PathVariable long chiefId) {

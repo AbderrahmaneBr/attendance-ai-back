@@ -32,7 +32,7 @@ public class AuthenticationService {
                 .lastname(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(UserRoles.TEACHER)
+                .role(UserRoles.USER)
                 .build();
         userRepository.save(user);
         Map<String, Object> extraClaims = new HashMap<>();

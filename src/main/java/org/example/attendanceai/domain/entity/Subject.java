@@ -27,6 +27,7 @@ public class Subject {
     @Builder.Default
     Boolean archived = false;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     Teacher teacher;

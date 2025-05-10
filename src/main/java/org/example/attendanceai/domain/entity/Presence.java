@@ -2,6 +2,7 @@ package org.example.attendanceai.domain.entity;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,10 +23,12 @@ public class Presence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "student_id")
     Student student;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "session_id")
     Session session;
@@ -33,6 +36,7 @@ public class Presence {
     @Nullable
     String description;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     PresenceStatus status;
 

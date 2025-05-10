@@ -25,10 +25,12 @@ public class Major {
     @Column(unique = true)
     String name;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "department_id")
     Department department;
 
+    @NotNull
     @OneToOne
     @JoinColumn(name = "chief_id")
     User chief;

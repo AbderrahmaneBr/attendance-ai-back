@@ -43,6 +43,7 @@ public class User implements UserDetails {
     @Nullable
     String profile_img;
 
+    @NotNull
     @Convert(converter = UserRolesConverter.class)
     UserRoles role;
 

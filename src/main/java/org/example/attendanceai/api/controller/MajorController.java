@@ -2,7 +2,10 @@ package org.example.attendanceai.api.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.attendanceai.api.request.MajorRequest;
+import org.example.attendanceai.api.response.MajorResponse;
 import org.example.attendanceai.domain.entity.Major;
+import org.example.attendanceai.domain.mapper.MajorMapper;
 import org.example.attendanceai.services.MajorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +22,13 @@ public class MajorController {
 
     private final MajorService majorService;
 
-
     @GetMapping
-    public ResponseEntity<List<Major>> getAllMajors() {
+    public ResponseEntity<List<MajorResponse>> getAllMajors() {
         return ResponseEntity.ok(majorService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Major> getMajorById(@PathVariable long id) {
+    public ResponseEntity<MajorResponse> getMajorById(@PathVariable long id) {
         return majorService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -34,23 +36,23 @@ public class MajorController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<Major> createMajor(@Valid @RequestBody Major major) {
-        Major majorS = majorService.save(major);
-        return ResponseEntity.status(HttpStatus.CREATED).body(majorS);
+    public ResponseEntity<MajorResponse> createMajor(@Valid @RequestBody MajorRequest request) {
+        MajorResponse response = majorService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<Major> updateMajor(
+    public ResponseEntity<MajorResponse> updateMajor(
             @PathVariable long id,
-            @Valid @RequestBody Major major) {
-        return majorService.update(id, major)
+            @Valid @RequestBody MajorRequest request) {
+        return majorService.update(id, request)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteMajor(@PathVariable long id) {
         if (majorService.deleteById(id)) {
             return ResponseEntity.noContent().build();
@@ -59,25 +61,25 @@ public class MajorController {
     }
 
     @PatchMapping("/{id}/archive")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
-    public ResponseEntity<Major> archiveMajor(@PathVariable long id) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<MajorResponse> archiveMajor(@PathVariable long id) {
         return majorService.archive(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/{id}/unarchive")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DEPARTMENT_CHIEF')")
-    public ResponseEntity<Major> unarchiveMajor(@PathVariable long id) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<MajorResponse> unarchiveMajor(@PathVariable long id) {
         return majorService.unarchive(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/department/{departmentId}")
-    public ResponseEntity<Optional<Major>> getMajorsByDepartmentId(@PathVariable long departmentId) {
-        Optional<Major> majors = majorService.findByDepartmentId(departmentId);
-        return ResponseEntity.ok(majors);
+    public ResponseEntity<Optional<MajorResponse>> getMajorsByDepartmentId(@PathVariable long departmentId) {
+        Optional<MajorResponse> response = majorService.findByDepartmentId(departmentId);
+        return ResponseEntity.ok(response);
     }
 //
 //    @GetMapping("/chief/{chiefId}")

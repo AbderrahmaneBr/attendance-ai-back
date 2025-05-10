@@ -4,14 +4,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import org.example.attendanceai.domain.entity.User;
 
 @Builder
-public class DepartmentRequest {
+public class MajorRequest {
 
-    @NotBlank(message = "Department name is required")
-    @Size(max = 100, message = "Department name must not exceed 100 characters")
+    @NotBlank(message = "Major name is required")
+    @Size(max = 100, message = "Major name must not exceed 100 characters")
     private String name;
+
+    @NotNull(message = "Department ID is required")
+    private Long departmentId;
 
     @NotNull(message = "Chief ID is required")
     private Long chiefId;
@@ -34,6 +36,14 @@ public class DepartmentRequest {
 
     public void setChiefId(Long chiefId) {
         this.chiefId = chiefId;
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 
     public Boolean getArchived() {
