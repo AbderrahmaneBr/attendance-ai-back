@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.attendanceai.domain.enums.StudyYear;
+import org.example.attendanceai.util.GenericEnumConverter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -28,8 +29,10 @@ public class Student {
     @NotNull
     String lastname;
     @NotNull
+    @Column(unique = true)
     String email;
     @Nullable
+    @Column(unique = true)
     String phone;
     @Nullable
     String address;
@@ -37,15 +40,16 @@ public class Student {
     @Nullable
     String profile_img;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "major_id")
     Major major;
 
-    //Todo abdo modified this to cneId
+    @NotNull
     @Column(unique = true)
     long cneId;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull
     StudyYear study_year;
 
     @Builder.Default

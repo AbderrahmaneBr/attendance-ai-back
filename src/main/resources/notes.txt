@@ -1,3 +1,5 @@
 - TO DO LATER
 - Make api/v1/auth/register endpoint accessible by ADMINS only
 - Make Error Messages Self-explanatory
+- Remove /auth/register and user UserController instead
+- Throw Right Error status code

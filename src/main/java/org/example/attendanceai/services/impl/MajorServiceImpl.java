@@ -1,8 +1,15 @@
 package org.example.attendanceai.services.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.example.attendanceai.api.request.MajorRequest;
+import org.example.attendanceai.api.response.DepartmentResponse;
+import org.example.attendanceai.api.response.MajorResponse;
 import org.example.attendanceai.domain.entity.Department;
 import org.example.attendanceai.domain.entity.Major;
 import org.example.attendanceai.domain.entity.User;
+import org.example.attendanceai.domain.mapper.DepartmentMapper;
+import org.example.attendanceai.domain.mapper.MajorMapper;
+import org.example.attendanceai.domain.mapper.UserMapper;
 import org.example.attendanceai.domain.repository.DepartmentRepository;
 import org.example.attendanceai.domain.repository.MajorRepository;
 import org.example.attendanceai.domain.repository.UserRepository;
@@ -12,75 +19,85 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
 public class MajorServiceImpl implements MajorService {
 
     private final MajorRepository majorRepository;
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
+    private final DepartmentMapper departmentMapper;
+    private final MajorMapper majorMapper;
+    private final UserMapper userMapper;
 
-    public MajorServiceImpl(MajorRepository majorRepository,
-                            DepartmentRepository departmentRepository,
-                            UserRepository userRepository) {
-        this.majorRepository = majorRepository;
-        this.departmentRepository = departmentRepository;
-        this.userRepository = userRepository;
+    @Override
+    @Transactional(readOnly = true)
+    public List<MajorResponse> findAll() {
+        return majorRepository.findAll().stream().map(major -> new MajorResponse(major.getId(), major.getName(), departmentMapper.toResponse(major.getDepartment()), userMapper.toResponse(major.getChief()), major.getArchived(), major.getCreatedAt(), major.getUpdatedAt())).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Major> findAll() {
-        return majorRepository.findAll();
+    public Optional<MajorResponse> findById(long id) {
+        Major major = majorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Major not found"));
+        return Optional.of(new MajorResponse(major.getId(), major.getName(), departmentMapper.toResponse(major.getDepartment()), userMapper.toResponse(major.getChief()), major.getArchived(), major.getCreatedAt(), major.getUpdatedAt()));
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Major> findById(long id) {
-        return majorRepository.findById(id);
+    @Transactional
+    public MajorResponse save(MajorRequest request) {
+        Major major = majorMapper.toEntity(request);
+
+        Department department = departmentRepository.findById(request.getDepartmentId())
+                .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+        major.setDepartment(department);
+
+        User chief = userRepository.findById(request.getChiefId())
+                .orElseThrow(() -> new IllegalArgumentException("Chief user not found"));
+        major.setChief(chief);
+        major.setArchived(false);
+
+        majorRepository.save(major);
+
+        MajorResponse response = new MajorResponse(
+                major.getId(), major.getName(), departmentMapper.toResponse(major.getDepartment()), userMapper.toResponse(major.getChief()), major.getArchived(), major.getCreatedAt(), major.getUpdatedAt()
+        );
+
+        return response;
     }
 
     @Override
-    public Major save(Major major) {
-        // Validate department exists if provided .getDepartment().getId() != null
-        if (major.getDepartment() != null) {
-            Department department = departmentRepository.findById(major.getDepartment().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Department not found"));
-            major.setDepartment(department);
-        }
-
-        // Validate chief exists if provided
-        if (major.getChief() != null) {
-            User chief = userRepository.findById(major.getChief().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Chief user not found"));
-            major.setChief(chief);
-        }
-
-        return majorRepository.save(major);
-    }
-
-    @Override
-    public Optional<Major> update(long id, Major majorDetails) {
+    public Optional<MajorResponse> update(long id, MajorRequest request) {
+        Major major = majorMapper.toEntity(request);
         return majorRepository.findById(id).map(existingMajor -> {
             // Update basic fields
-            if (majorDetails.getName() != null) {
-                existingMajor.setName(majorDetails.getName());
+            if (major.getName() != null) {
+                existingMajor.setName(major.getName());
             }
 
             // Update department relationship
-            if (majorDetails.getDepartment() != null) {
-                Department department = departmentRepository.findById(majorDetails.getDepartment().getId())
+            if (major.getDepartment() != null) {
+                Department department = departmentRepository.findById(major.getDepartment().getId())
                         .orElseThrow(() -> new IllegalArgumentException("Department not found"));
                 existingMajor.setDepartment(department);
             }
 
             // Update chief relationship
-            if (majorDetails.getChief() != null) {
-                User chief = userRepository.findById(majorDetails.getChief().getId())
+            if (major.getChief() != null) {
+                User chief = userRepository.findById(major.getChief().getId())
                         .orElseThrow(() -> new IllegalArgumentException("Chief user not found"));
                 existingMajor.setChief(chief);
             }
 
-            return majorRepository.save(existingMajor);
+            Major savedMajor = majorRepository.save(existingMajor);
+            MajorResponse response = new MajorResponse(
+                    savedMajor.getId(), savedMajor.getName(), departmentMapper.toResponse(savedMajor.getDepartment()), userMapper.toResponse(savedMajor.getChief()), savedMajor.getArchived(), savedMajor.getCreatedAt(), savedMajor.getUpdatedAt()
+            );
+
+            return response;
         });
     }
 
@@ -94,25 +111,40 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    public Optional<Major> archive(long id) {
-        return majorRepository.findById(id).map(major -> {
+    public Optional<MajorResponse> archive(long id) {
+        Major major = majorRepository.findById(id).orElseThrow(() -> new RuntimeException("Major not found"));
+
+        if (major != null) {
             major.setArchived(true);
-            return majorRepository.save(major);
-        });
+            Major savedMajor = majorRepository.save(major);
+            MajorResponse response = new MajorResponse(
+                    savedMajor.getId(), savedMajor.getName(), departmentMapper.toResponse(savedMajor.getDepartment()), userMapper.toResponse(savedMajor.getChief()), savedMajor.getArchived(), savedMajor.getCreatedAt(), savedMajor.getUpdatedAt()
+            );
+            return Optional.of(response);
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Optional<Major> unarchive(long id) {
-        return majorRepository.findById(id).map(major -> {
+    public Optional<MajorResponse> unarchive(long id) {
+        Major major = majorRepository.findById(id).orElseThrow(() -> new RuntimeException("Major not found"));
+
+        if (major != null) {
             major.setArchived(false);
-            return majorRepository.save(major);
-        });
+            Major savedMajor = majorRepository.save(major);
+            MajorResponse response = new MajorResponse(
+                    savedMajor.getId(), savedMajor.getName(), departmentMapper.toResponse(savedMajor.getDepartment()), userMapper.toResponse(savedMajor.getChief()), savedMajor.getArchived(), savedMajor.getCreatedAt(), savedMajor.getUpdatedAt()
+            );
+            return Optional.of(response);
+        }
+        return Optional.empty();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Major> findByDepartmentId(long departmentId) {
-        return majorRepository.findById(departmentId);
+    public Optional<MajorResponse> findByDepartmentId(long departmentId) {
+        Major major = majorRepository.findByDepartmentId(departmentId).orElseThrow(() -> new RuntimeException("Major not found"));
+        return Optional.of(new MajorResponse(major.getId(), major.getName(), departmentMapper.toResponse(major.getDepartment()), userMapper.toResponse(major.getChief()), major.getArchived(), major.getCreatedAt(), major.getUpdatedAt()));
     }
 
 //    @Override

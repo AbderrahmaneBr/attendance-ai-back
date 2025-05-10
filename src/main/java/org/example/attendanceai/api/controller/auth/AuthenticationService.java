@@ -32,10 +32,11 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(UserRoles.TEACHER)
+                .role(UserRoles.USER)
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
         Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", savedUser.getId());
         extraClaims.put("roles", user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -52,6 +53,7 @@ public class AuthenticationService {
         // User not found
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", user.getId());
         extraClaims.put("roles", user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)

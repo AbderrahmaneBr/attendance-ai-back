@@ -27,20 +27,23 @@ public class Session {
     @NotNull
     String endHour;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "subject_id")
     Subject subject;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     Teacher teacher;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "classroom_id")
     Classroom classroom;
 
-    Boolean archived;
-
+    @Builder.Default
+    Boolean archived = false;
 
     @CreationTimestamp
     @Column(updatable = false)

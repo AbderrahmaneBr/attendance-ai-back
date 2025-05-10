@@ -22,8 +22,10 @@ public class Classroom {
     long id;
 
     @NotNull
+    @Column(unique = true)
     String name;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "department_id")
     Department department;
