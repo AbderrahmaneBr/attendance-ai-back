@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -21,11 +23,12 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    LocalDateTime date;
     @NotNull
-    String startHour;
+    LocalDate date;
     @NotNull
-    String endHour;
+    LocalTime startHour;
+    @NotNull
+    LocalTime endHour;
 
     @NotNull
     @ManyToOne

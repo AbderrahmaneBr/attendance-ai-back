@@ -39,7 +39,7 @@ public class PresenceServiceImpl implements PresenceService {
 
     @Override
     public List<PresenceResponse> findAll() {
-        return presenceRepository.findAll().stream().map(presence -> presenceMapper.toResponse(presence)).collect(Collectors.toList());
+        return presenceRepository.findAll().stream().map(presenceMapper::toResponse).collect(Collectors.toList());
     }
 
     @Override

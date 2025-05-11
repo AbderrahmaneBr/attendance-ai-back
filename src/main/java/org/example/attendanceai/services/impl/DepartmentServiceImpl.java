@@ -61,7 +61,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         department.setName(request.getName());
         department.setChief(userRepository.findById(request.getChiefId()).orElse(null));
-        department.setArchived(request.getArchived());
 
         Department updated = departmentRepository.save(department);
         DepartmentResponse response = departmentMapper.toResponse(updated);

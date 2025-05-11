@@ -71,7 +71,7 @@ public class PresenceController {
 
     @PatchMapping("/{id}/unarchive")
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<PresenceResponse> unarchiveMajor(@PathVariable long id) {
+    public ResponseEntity<PresenceResponse> unarchivePresence(@PathVariable long id) {
         return presenceService.unarchive(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

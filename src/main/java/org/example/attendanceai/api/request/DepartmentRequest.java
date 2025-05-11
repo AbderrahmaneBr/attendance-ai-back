@@ -4,9 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import lombok.Data;
 import org.example.attendanceai.domain.entity.User;
 
-@Builder
+@Data
 public class DepartmentRequest {
 
     @NotBlank(message = "Department name is required")
@@ -16,31 +17,4 @@ public class DepartmentRequest {
     @NotNull(message = "Chief ID is required")
     private Long chiefId;
 
-    @Builder.Default
-    private Boolean archived = false;
-
-    // Getters and Setters
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getChiefId() {
-        return chiefId;
-    }
-
-    public void setChiefId(Long chiefId) {
-        this.chiefId = chiefId;
-    }
-
-    public Boolean getArchived() {
-        return archived;
-    }
-
-    public void setArchived(Boolean archived) {
-        this.archived = archived;
-    }
 }
