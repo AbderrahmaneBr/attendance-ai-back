@@ -3,3 +3,4 @@
 - Make Error Messages Self-explanatory
 - Remove /auth/register and user UserController instead
 - Throw Right Error status code
+- Hide Auth Secret Key When release to public
