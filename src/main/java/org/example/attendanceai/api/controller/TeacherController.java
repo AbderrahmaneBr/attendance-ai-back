@@ -1,5 +1,6 @@
 package org.example.attendanceai.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/teachers")
 @AllArgsConstructor
-
+@Tag(name = "Teacher", description = "Operations related to teacher")
 public class TeacherController {
 
     private final TeacherService teacherService;
@@ -73,14 +74,6 @@ public class TeacherController {
 //        List<Teacher> teachers = teacherService.findAllWithSubjects();
 //        return ResponseEntity.ok(teacherMapper.toResponseTeachers(teachers));
 //    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<TeacherResponse> getTeacherByUserId(@PathVariable long userId) {
-        return teacherService.findByUserId(userId)
-                .map(teacherMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
 //    @GetMapping("/current")
 //    public ResponseEntity<TeacherResponse> getCurrentTeacher(@RequestAttribute("id") Long userId) {

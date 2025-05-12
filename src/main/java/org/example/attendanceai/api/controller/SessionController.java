@@ -1,5 +1,6 @@
 package org.example.attendanceai.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/sessions")
+@Tag(name = "Session (Class session)", description = "Operations related to class session")
 public class SessionController {
     private final SessionService sessionService;
 

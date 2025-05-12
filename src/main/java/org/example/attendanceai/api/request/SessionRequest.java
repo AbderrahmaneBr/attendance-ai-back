@@ -1,6 +1,7 @@
 package org.example.attendanceai.api.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,21 +19,27 @@ import java.time.LocalTime;
 public class SessionRequest {
 
     @JsonFormat(pattern = "dd-MM-yyyy")
+    @Schema(description = "Session date 'dd-MM-yyyy' format")
     private LocalDate date;
 
     @JsonFormat(pattern = "HH:mm")
+    @Schema(description = "Session start hour 'HH:mm' format")
     private LocalTime startHour;
 
     @JsonFormat(pattern = "HH:mm")
+    @Schema(description = "Session end hour 'HH:mm' format")
     private LocalTime endHour;
 
     @NotNull(message = "Subject ID is required")
+    @Schema(description = "Session's Subject id")
     private Long subjectId;
 
     @NotNull(message = "Teacher ID is required")
+    @Schema(description = "Session's Teacher id")
     private Long teacherId;
 
     @NotNull(message = "Classroom ID is required")
+    @Schema(description = "Session's Classroom id")
     private Long classroomId;
 
 }

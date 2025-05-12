@@ -74,8 +74,8 @@ public class SubjectServiceImpl implements SubjectService {
         subject.setCreatedAt(LocalDateTime.now());
         subject.setUpdatedAt(LocalDateTime.now());
 
-        if (request.getTeacher() != null) {
-            Teacher teacher = teacherRepository.findById(request.getTeacher().getId())
+        if (request.getTeacherId() != null) {
+            Teacher teacher = teacherRepository.findById(request.getTeacherId())
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
             subject.setTeacher(teacher);
         }
@@ -112,12 +112,11 @@ public class SubjectServiceImpl implements SubjectService {
 
         // Update the subject
         subject.setName(request.getName());
-        subject.setArchived(request.getArchived());
         subject.setUpdatedAt(LocalDateTime.now());
 
         // If the teacher exists, update the teacher relationship
-        if (request.getTeacher() != null) {
-            Teacher teacher = teacherRepository.findById(request.getTeacher().getId())
+        if (request.getTeacherId() != null) {
+            Teacher teacher = teacherRepository.findById(request.getTeacherId())
                     .orElseThrow(() -> new RuntimeException("Teacher not found"));
             subject.setTeacher(teacher);
         }

@@ -4,3 +4,5 @@
 - Remove /auth/register and user UserController instead
 - Throw Right Error status code
 - Hide Auth Secret Key When release to public
+- Add Login Layer before accessing swagger | filter it in security config
+- Change spring.profiles.active to prod in application.properties

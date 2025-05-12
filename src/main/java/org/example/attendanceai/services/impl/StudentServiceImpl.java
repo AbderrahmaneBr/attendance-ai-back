@@ -59,9 +59,6 @@ public class StudentServiceImpl implements StudentService {
                 if (studentDetails.getProfile_img() != null) {
                     existingStudent.setProfile_img(studentDetails.getProfile_img());
                 }
-                if (studentDetails.getArchived() != null) {
-                    existingStudent.setArchived(studentDetails.getArchived());
-                }
 
                 //TODO : ajout de la modification pour les autres champs de USER entities a abderahmane hhh
                 return studentRepository.save(existingStudent);

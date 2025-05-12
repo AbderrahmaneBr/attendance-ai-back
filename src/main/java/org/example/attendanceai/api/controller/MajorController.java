@@ -1,6 +1,8 @@
 package org.example.attendanceai.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.attendanceai.api.request.MajorRequest;
 import org.example.attendanceai.api.response.MajorResponse;
@@ -16,7 +18,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/majors")
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Tag(name = "Major", description = "Operations related to major")
 public class MajorController {
 
     private final MajorService majorService;

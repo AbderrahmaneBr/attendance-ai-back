@@ -1,5 +1,6 @@
 package org.example.attendanceai.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.attendanceai.api.request.MajorRequest;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/presence")
 @AllArgsConstructor
+@Tag(name = "Presence", description = "Operations related to presence")
 public class PresenceController {
 
     private final PresenceService presenceService;

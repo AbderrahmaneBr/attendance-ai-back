@@ -1,6 +1,8 @@
 package org.example.attendanceai.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.attendanceai.api.request.UserRequest;
 import org.example.attendanceai.domain.entity.User;
@@ -16,7 +18,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Tag(name = "User", description = "Operations related to user")
 public class UserController {
 
     private final UserService userService;

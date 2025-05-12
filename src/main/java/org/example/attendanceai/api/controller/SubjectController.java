@@ -1,7 +1,9 @@
 package org.example.attendanceai.api.controller;
 
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.attendanceai.api.request.SubjectRequest;
 import org.example.attendanceai.api.response.SubjectResponse;
@@ -17,7 +19,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/subjects")
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Tag(name = "Subject", description = "Operations related to subject")
 public class SubjectController {
     @Autowired
     private final SubjectService subjectService;
