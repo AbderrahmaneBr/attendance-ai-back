@@ -1,5 +1,6 @@
 package org.example.attendanceai.services.impl;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.attendanceai.api.request.MajorRequest;
 import org.example.attendanceai.api.response.DepartmentResponse;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MajorServiceImpl implements MajorService {
 
     private final MajorRepository majorRepository;

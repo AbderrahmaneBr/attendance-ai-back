@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 public class DepartmentResponse {
-    long id;
+    Long id;
     String name;
     UserResponse chief;
     Boolean archived;

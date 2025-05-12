@@ -3,11 +3,8 @@ package org.example.attendanceai.api.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.example.attendanceai.api.request.PresenceRequest;
 import org.example.attendanceai.api.request.SessionRequest;
-import org.example.attendanceai.api.response.PresenceResponse;
 import org.example.attendanceai.api.response.SessionResponse;
-import org.example.attendanceai.services.PresenceService;
 import org.example.attendanceai.services.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +33,7 @@ public class SessionController {
 
     @PostMapping
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<SessionResponse> createPresence(@Valid @RequestBody SessionRequest request) {
+    public ResponseEntity<SessionResponse> createSession(@Valid @RequestBody SessionRequest request) {
         SessionResponse response = sessionService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

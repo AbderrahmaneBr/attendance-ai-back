@@ -6,6 +6,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class TeacherResponse {
-    long id;
+    Long id;
     UserResponse user;
 }

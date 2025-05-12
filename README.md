@@ -23,3 +23,6 @@ src/main/java/com/yourcompany/presencemanagement/
 │   └── specification/         # JPA specifications for queries
 └── util/                      # Utility classes
 ```
+
+## Database Architecture
+![Database Conception](imgs/conception_db.png)

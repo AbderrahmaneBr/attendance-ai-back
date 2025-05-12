@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 public class SessionResponse {
-    long id;
+    Long id;
     @JsonFormat(pattern = "dd-MM-yyyy")
     LocalDate date;
     @JsonFormat(pattern = "HH:mm")

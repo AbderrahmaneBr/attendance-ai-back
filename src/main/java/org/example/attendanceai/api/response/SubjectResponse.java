@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 public class SubjectResponse {
-    long id;
+    Long id;
     String name;
     TeacherResponse teacher;
     Boolean archived;

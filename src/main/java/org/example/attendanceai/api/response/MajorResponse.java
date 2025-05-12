@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 public class MajorResponse {
-    long id;
+    Long id;
     String name;
     DepartmentResponse department;
     UserResponse chief;

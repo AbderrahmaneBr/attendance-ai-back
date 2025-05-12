@@ -12,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -99,44 +100,42 @@ public class SessionServiceImpl implements SessionService {
             throw new AccessDeniedException("You don't have permission to update this Session.");
         }
 
-        return sessionRepository.findById(id).map(existingSession -> {
-            // Update basic fields
+        Session session = sessionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
 
-            if (request.getDate() != null) {
-                existingSession.setDate(request.getDate());
-            }
+        if (request.getDate() != null) {
+            session.setDate(request.getDate());
+        }
 
-            if (request.getStartHour() != null) {
-                existingSession.setStartHour(request.getStartHour());
-            }
+        if (request.getStartHour() != null) {
+            session.setStartHour(request.getStartHour());
+        }
 
-            if (request.getEndHour() != null) {
-                existingSession.setEndHour(request.getEndHour());
-            }
+        if (request.getEndHour() != null) {
+            session.setEndHour(request.getEndHour());
+        }
 
-            if (request.getSubjectId() != null) {
-                Subject subject = subjectRepository.findById(request.getSubjectId())
-                        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
-                existingSession.setSubject(subject);
-            }
+        if (request.getSubjectId() != null) {
+            Subject subject = subjectRepository.findById(request.getSubjectId())
+                    .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
+            session.setSubject(subject);
+        }
 
-            if (request.getTeacherId() != null) {
-                Teacher teacher = teacherRepository.findById(request.getTeacherId())
-                        .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
-                existingSession.setTeacher(teacher);
-            }
+        if (request.getTeacherId() != null) {
+            Teacher teacher = teacherRepository.findById(request.getTeacherId())
+                    .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
+            session.setTeacher(teacher);
+        }
 
-            if (request.getClassroomId() != null) {
-                Classroom classroom = classroomRepository.findById(request.getClassroomId())
-                        .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
-                existingSession.setClassroom(classroom);
-            }
+        if (request.getClassroomId() != null) {
+            Classroom classroom = classroomRepository.findById(request.getClassroomId())
+                    .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+            session.setClassroom(classroom);
+        }
 
-            Session savedSession = sessionRepository.save(existingSession);
-            SessionResponse response = sessionMapper.toResponse(savedSession);
+        Session savedSession = sessionRepository.save(session);
+        return Optional.of(sessionMapper.toResponse(savedSession));
 
-            return response;
-        });
     }
 
     @Override

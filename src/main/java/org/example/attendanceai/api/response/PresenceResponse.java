@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 public class PresenceResponse {
-    long id;
+    Long id;
     StudentResponse student;
     SessionResponse session;
     String status;
