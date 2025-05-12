@@ -24,5 +24,10 @@ src/main/java/com/yourcompany/presencemanagement/
 └── util/                      # Utility classes
 ```
 
+## Swagger link
+```
+http://localhost:8086/swagger-ui/index.html#
+```
+
 ## Database Architecture
 ![Database Conception](imgs/conception_db.png)
