@@ -1,6 +1,5 @@
 package org.example.attendanceai.domain.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,14 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.attendanceai.domain.model.ScheduleDetails;
-import org.example.attendanceai.domain.persistence.ScheduleDetailsConverter;
+import org.example.attendanceai.util.ScheduleDetailsConverter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Data
@@ -35,8 +33,9 @@ public class Schedule {
     private ScheduleDetails details;
 
     @NotNull
-    @OneToMany(mappedBy = "schedule")
-    List<Session> sessions;
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<Session> sessions = new ArrayList<>();
 
     @Builder.Default
     Boolean archived = false;

@@ -6,3 +6,8 @@
 - Hide Auth Secret Key When release to public
 - Add Login Layer before accessing swagger | filter it in security config
 - Change spring.profiles.active to prod in application.properties
+- make get user by id only for admins (ADD ADMIN PRIVILEGES)
+- make sure only teachers who have the right to mark presence are the one marking it
+- add marking presence endpoint (mark it as filled)
+- add check on study year classroom?
+- student update

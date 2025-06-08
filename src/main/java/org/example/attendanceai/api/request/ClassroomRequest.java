@@ -13,6 +13,9 @@ public class ClassroomRequest {
     @Schema(description = "Classroom name")
     String name;
 
+    @NotBlank(message = "Classroom study year is required")
+    String study_year;
+
     @NotNull(message = "Department ID is required")
     @Schema(description = "Classroom's department id")
     Long departmentId;

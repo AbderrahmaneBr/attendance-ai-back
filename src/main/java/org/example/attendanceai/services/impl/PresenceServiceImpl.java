@@ -7,6 +7,7 @@ import org.example.attendanceai.api.response.MajorResponse;
 import org.example.attendanceai.api.response.PresenceResponse;
 import org.example.attendanceai.config.security.JwtService;
 import org.example.attendanceai.domain.entity.*;
+import org.example.attendanceai.domain.enums.PresenceStatus;
 import org.example.attendanceai.domain.mapper.PresenceMapper;
 import org.example.attendanceai.domain.repository.PresenceRepository;
 import org.example.attendanceai.domain.repository.SessionRepository;
@@ -51,14 +52,14 @@ public class PresenceServiceImpl implements PresenceService {
     public PresenceResponse save(PresenceRequest request) {
         Presence presence = presenceMapper.toEntity(request);
 
-        if (presence.getStudent() != null) {
-            Student student = studentRepository.findById(presence.getStudent().getId())
+        if (request.getStudentId() != null) {
+            Student student = studentRepository.findById(request.getStudentId())
                     .orElseThrow(() -> new IllegalArgumentException("Student not found"));
             presence.setStudent(student);
         }
 
-        if (presence.getSession() != null) {
-            Session session = sessionRepository.findById(presence.getSession().getId())
+        if (request.getSessionId() != null) {
+            Session session = sessionRepository.findById(request.getSessionId())
                     .orElseThrow(() -> new IllegalArgumentException("Session not found"));
             presence.setSession(session);
         }
@@ -111,6 +112,31 @@ public class PresenceServiceImpl implements PresenceService {
 
             return response;
         });
+    }
+
+    @Override
+    public void markPresence(long id, PresenceStatus status) {
+        // Find User
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Find Record
+        Presence presenceQuery = presenceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Presence not found"));
+
+        // Check if user is ADMIN or owner of the record
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+        boolean isOwner = presenceQuery.getSession().getSubject().getTeacher().getUserId().equals(user.getId());
+
+        if (!isAdmin && !isOwner) {
+            throw new AccessDeniedException("You don't have permission to update this Presence.");
+        }
+
+        presenceRepository.findById(id).stream().forEach(existingPresence -> {
+            // Update basic fields
+            existingPresence.setStatus(status);
+        });
+
     }
 
     @Override

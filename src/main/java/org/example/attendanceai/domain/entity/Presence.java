@@ -38,7 +38,8 @@ public class Presence {
     String description;
 
     @NotNull
-    PresenceStatus status;
+    @Builder.Default
+    PresenceStatus status = PresenceStatus.EMPTY;
 
     @Builder.Default
     Boolean archived = false;

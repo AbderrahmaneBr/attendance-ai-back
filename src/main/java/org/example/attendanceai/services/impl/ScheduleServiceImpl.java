@@ -23,6 +23,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponse create(ScheduleRequest request) {
         Schedule schedule = scheduleMapper.toEntity(request);
+
+        if(request.getDetails() != null) {
+            schedule.setDetails(request.getDetails());
+        }
+
         return scheduleMapper.toResponse(scheduleRepository.save(schedule));
     }
 

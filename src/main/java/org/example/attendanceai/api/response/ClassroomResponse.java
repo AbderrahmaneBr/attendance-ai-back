@@ -11,6 +11,7 @@ public class ClassroomResponse {
     Long id;
     String name;
     DepartmentResponse department;
+    String study_year;
     Boolean archived;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
