@@ -30,6 +30,7 @@ public class SessionServiceImpl implements SessionService {
     private final TeacherRepository teacherRepository;
     private final ClassroomRepository classroomRepository;
     private final UserRepository userRepository;
+    private final ScheduleRepository scheduleRepository;
 
     @Override
     public List<SessionResponse> findAll() {
@@ -46,17 +47,17 @@ public class SessionServiceImpl implements SessionService {
 
         Session session = new Session();
 
-        if (request.getDate() != null) {
-            session.setDate(request.getDate());
-        }
-
-        if (request.getStartHour() != null) {
-            session.setStartHour(request.getStartHour());
-        }
-
-        if (request.getEndHour() != null) {
-            session.setEndHour(request.getEndHour());
-        }
+//        if (request.getDate() != null) {
+//            session.setDate(request.getDate());
+//        }
+//
+//        if (request.getStartHour() != null) {
+//            session.setStartHour(request.getStartHour());
+//        }
+//
+//        if (request.getEndHour() != null) {
+//            session.setEndHour(request.getEndHour());
+//        }
 
         if (request.getSubjectId() != null) {
             Subject subject = subjectRepository.findById(request.getSubjectId())
@@ -64,10 +65,14 @@ public class SessionServiceImpl implements SessionService {
             session.setSubject(subject);
         }
 
-        if (request.getTeacherId() != null) {
-            Teacher teacher = teacherRepository.findById(request.getTeacherId())
-                    .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
-            session.setTeacher(teacher);
+        if (request.getScheduleId() != null) {
+            Schedule schedule = scheduleRepository.findById(request.getScheduleId())
+                    .orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+            session.setSchedule(schedule);
+        }
+
+        if (request.getStatus() != null) {
+            session.setStatus(request.getStatus());
         }
 
         if (request.getClassroomId() != null) {
@@ -94,7 +99,7 @@ public class SessionServiceImpl implements SessionService {
 
         // Check if user is ADMIN or owner of the record
         boolean isAdmin = user.getRole().name().equals("ADMIN");
-        boolean isOwner = sessionQuery.getTeacher().getUserId().equals(user.getId());
+        boolean isOwner = sessionQuery.getSubject().getTeacher().getUserId().equals(user.getId());
 
         if (!isAdmin && !isOwner) {
             throw new AccessDeniedException("You don't have permission to update this Session.");
@@ -103,17 +108,17 @@ public class SessionServiceImpl implements SessionService {
         Session session = sessionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
-        if (request.getDate() != null) {
-            session.setDate(request.getDate());
-        }
-
-        if (request.getStartHour() != null) {
-            session.setStartHour(request.getStartHour());
-        }
-
-        if (request.getEndHour() != null) {
-            session.setEndHour(request.getEndHour());
-        }
+//        if (request.getDate() != null) {
+//            session.setDate(request.getDate());
+//        }
+//
+//        if (request.getStartHour() != null) {
+//            session.setStartHour(request.getStartHour());
+//        }
+//
+//        if (request.getEndHour() != null) {
+//            session.setEndHour(request.getEndHour());
+//        }
 
         if (request.getSubjectId() != null) {
             Subject subject = subjectRepository.findById(request.getSubjectId())
@@ -121,10 +126,14 @@ public class SessionServiceImpl implements SessionService {
             session.setSubject(subject);
         }
 
-        if (request.getTeacherId() != null) {
-            Teacher teacher = teacherRepository.findById(request.getTeacherId())
-                    .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
-            session.setTeacher(teacher);
+        if (request.getScheduleId() != null) {
+            Schedule schedule = scheduleRepository.findById(request.getScheduleId())
+                    .orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+            session.setSchedule(schedule);
+        }
+
+        if (request.getStatus() != null) {
+            session.setStatus(request.getStatus());
         }
 
         if (request.getClassroomId() != null) {
@@ -160,7 +169,7 @@ public class SessionServiceImpl implements SessionService {
 
         // Check if user is ADMIN or owner of the record
         boolean isAdmin = user.getRole().name().equals("ADMIN");
-        boolean isOwner = sessionQuery.getTeacher().getUserId().equals(user.getId());
+        boolean isOwner = sessionQuery.getSubject().getTeacher().getUserId().equals(user.getId());
 
         if (!isAdmin && !isOwner) {
             throw new AccessDeniedException("You don't have permission to update this Session.");
@@ -184,7 +193,7 @@ public class SessionServiceImpl implements SessionService {
 
         // Check if user is ADMIN or owner of the record
         boolean isAdmin = user.getRole().name().equals("ADMIN");
-        boolean isOwner = sessionQuery.getTeacher().getUserId().equals(user.getId());
+        boolean isOwner = sessionQuery.getSubject().getTeacher().getUserId().equals(user.getId());
 
         if (!isAdmin && !isOwner) {
             throw new AccessDeniedException("You don't have permission to update this Session.");

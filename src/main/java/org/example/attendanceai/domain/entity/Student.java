@@ -37,7 +37,7 @@ public class Student {
     @Nullable
     String address;
 
-    @Nullable
+    @NotNull
     String profile_img;
 
     @NotNull
@@ -48,9 +48,6 @@ public class Student {
     @NotNull
     @Column(unique = true)
     long cneId;
-
-    @NotNull
-    StudyYear study_year;
 
     @Builder.Default
     Boolean archived = false;

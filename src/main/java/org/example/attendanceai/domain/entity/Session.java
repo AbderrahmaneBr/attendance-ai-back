@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.attendanceai.domain.enums.PresenceStatus;
+import org.example.attendanceai.domain.enums.SessionStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,12 +25,12 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @NotNull
-    LocalDate date;
-    @NotNull
-    LocalTime startHour;
-    @NotNull
-    LocalTime endHour;
+//    @NotNull
+//    LocalDate date;
+//    @NotNull
+//    LocalTime startHour;
+//    @NotNull
+//    LocalTime endHour;
 
     @NotNull
     @ManyToOne
@@ -37,13 +39,16 @@ public class Session {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
-    Teacher teacher;
+    @JoinColumn(name = "classroom_id")
+    Classroom classroom;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "classroom_id")
-    Classroom classroom;
+    @JoinColumn(name = "schedule_id")
+    Schedule schedule;
+
+    @NotNull
+    SessionStatus status;
 
     @Builder.Default
     Boolean archived = false;

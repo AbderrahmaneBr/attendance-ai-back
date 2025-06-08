@@ -81,7 +81,7 @@ public class PresenceServiceImpl implements PresenceService {
 
         // Check if user is ADMIN or owner of the record
         boolean isAdmin = user.getRole().name().equals("ADMIN");
-        boolean isOwner = presenceQuery.getSession().getTeacher().getUserId().equals(user.getId());
+        boolean isOwner = presenceQuery.getSession().getSubject().getTeacher().getUserId().equals(user.getId());
 
         if (!isAdmin && !isOwner) {
             throw new AccessDeniedException("You don't have permission to update this Presence.");
@@ -92,10 +92,6 @@ public class PresenceServiceImpl implements PresenceService {
             // Update basic fields
             if (presence.getDescription() != null) {
                 existingPresence.setDescription(presence.getDescription());
-            }
-
-            if (presence.getStatus() != null) {
-                existingPresence.setStatus(presence.getStatus());
             }
 
             if (presence.getStudent() != null) {
@@ -139,7 +135,7 @@ public class PresenceServiceImpl implements PresenceService {
 
         // Check if user is ADMIN or owner of the record
         boolean isAdmin = user.getRole().name().equals("ADMIN");
-        boolean isOwner = presenceQuery.getSession().getTeacher().getUserId().equals(user.getId());
+        boolean isOwner = presenceQuery.getSession().getSubject().getTeacher().getUserId().equals(user.getId());
 
         if (!isAdmin && !isOwner) {
             throw new AccessDeniedException("You don't have permission to update this Presence.");
@@ -162,7 +158,7 @@ public class PresenceServiceImpl implements PresenceService {
 
         // Check if user is ADMIN or owner of the record
         boolean isAdmin = user.getRole().name().equals("ADMIN");
-        boolean isOwner = presenceQuery.getSession().getTeacher().getUserId().equals(user.getId());
+        boolean isOwner = presenceQuery.getSession().getSubject().getTeacher().getUserId().equals(user.getId());
 
         if (!isAdmin && !isOwner) {
             throw new AccessDeniedException("You don't have permission to update this Presence.");
