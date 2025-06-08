@@ -31,3 +31,6 @@ http://localhost:8086/swagger-ui/index.html#
 
 ## Database Architecture
 ![Database Conception](imgs/conception_db.png)
+
+## System Design
+![System Design](imgs/system_design.jpg)
