@@ -39,6 +39,10 @@ public class StudentRequest {
     @Schema(description = "ID of the student's major")
     private Long majorId;
 
+    @NotNull(message = "Group ID is required")
+    @Schema(description = "ID of the student's group")
+    private Long groupId;
+
     @NotNull(message = "CNE ID is required")
     @Schema(description = "Unique CNE ID")
     private Long cneId;

@@ -9,6 +9,7 @@ import org.example.attendanceai.domain.entity.Student;
 import org.example.attendanceai.domain.mapper.StudentMapper;
 import org.example.attendanceai.services.StudentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class StudentController {
     private final StudentMapper studentMapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StudentResponse> createStudent(@Valid @RequestBody StudentRequest request) {
         Student student = studentMapper.toEntity(request);
         Student savedStudent = studentService.save(student);

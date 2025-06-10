@@ -31,6 +31,7 @@ public class DepartmentController {
         private final UserService userService;
 
         @GetMapping
+        @PreAuthorize("hasRole('ADMIN')")
         public ResponseEntity<List<DepartmentResponse>> getAllDepartments() {
                 return ResponseEntity.ok(departmentService.findAll());
         }

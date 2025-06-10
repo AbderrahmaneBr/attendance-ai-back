@@ -1,7 +1,11 @@
 package org.example.attendanceai.services.impl;
 
+import org.example.attendanceai.domain.entity.Group;
+import org.example.attendanceai.domain.entity.Major;
 import org.example.attendanceai.domain.entity.Student;
 import org.example.attendanceai.domain.enums.StudyYear;
+import org.example.attendanceai.domain.repository.GroupRepository;
+import org.example.attendanceai.domain.repository.MajorRepository;
 import org.example.attendanceai.domain.repository.StudentRepository;
 import org.example.attendanceai.services.StudentService;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +21,16 @@ import java.util.Optional;
 @Service
 @Transactional
 public class StudentServiceImpl implements StudentService {
-//Todo defferenciate betwen the two rep and serv
-        private final StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
+    private final MajorRepository majorRepository;
 
 
-        public StudentServiceImpl(StudentRepository studentRepository) {
-            this.studentRepository = studentRepository;
-        }
+    public StudentServiceImpl(StudentRepository studentRepository, GroupRepository groupRepository, MajorRepository majorRepository) {
+        this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
+        this.majorRepository = majorRepository;
+    }
 
         @Override
         @Transactional(readOnly = true)
@@ -59,8 +66,26 @@ public class StudentServiceImpl implements StudentService {
                 if (studentDetails.getProfile_img() != null) {
                     existingStudent.setProfile_img(studentDetails.getProfile_img());
                 }
+                if (studentDetails.getPhone() != null) {
+                    existingStudent.setPhone(studentDetails.getPhone());
+                }
+                if (studentDetails.getAddress() != null) {
+                    existingStudent.setAddress(studentDetails.getAddress());
+                }
+                existingStudent.setCneId(studentDetails.getCneId());
 
-                //TODO : ajout de la modification pour les autres champs de USER entities a abderahmane hhh
+                if (studentDetails.getGroup() != null) {
+                    Group group = groupRepository.findById(studentDetails.getGroup().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+                    existingStudent.setGroup(group);
+                }
+
+                if (studentDetails.getMajor() != null) {
+                    Major major = majorRepository.findById(studentDetails.getMajor().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Major not found"));
+                    existingStudent.setMajor(major);
+                }
+
                 return studentRepository.save(existingStudent);
             });
         }
@@ -104,7 +129,16 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findByCneId(cneId);
     }
 
-            //Todo a revoir ????
+    @Override
+    public List<Student> findByStudyYear(StudyYear studyYear) {
+        return studentRepository.findByStudyYear(studyYear);
+    }
+
+    @Override
+    public List<Student> findByGroupId(StudyYear studyYear) {
+        return studentRepository.findByGroup_StudyYear(studyYear);
+    }
+
 //    @Override
 //    public List<Student> findByStudyYear(StudyYear studyYear) {
 //        List<Student> students = studentRepository.findByStudyYear(studyYear);

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Classroom {
+public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -25,8 +25,13 @@ public class Classroom {
     @NotNull
     String name;
 
-    @Nullable
-    Long camera_id;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    Department department;
+
+    @NotNull
+    String study_year;
 
     @Builder.Default
     Boolean archived = false;

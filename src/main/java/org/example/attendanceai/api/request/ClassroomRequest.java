@@ -1,6 +1,7 @@
 package org.example.attendanceai.api.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,10 +14,7 @@ public class ClassroomRequest {
     @Schema(description = "Classroom name")
     String name;
 
-    @NotBlank(message = "Classroom study year is required")
-    String study_year;
-
-    @NotNull(message = "Department ID is required")
-    @Schema(description = "Classroom's department id")
-    Long departmentId;
+    @Nullable
+    Long cameraId;
 }
+

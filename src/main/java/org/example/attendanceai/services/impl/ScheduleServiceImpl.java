@@ -73,4 +73,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setArchived(true);
         scheduleRepository.save(schedule);
     }
+
+    @Override
+    public void unarchive(Long id) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + id));
+
+        schedule.setArchived(false);
+        scheduleRepository.save(schedule);
+    }
 }

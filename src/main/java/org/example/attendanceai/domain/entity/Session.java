@@ -6,14 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.attendanceai.domain.enums.PresenceStatus;
 import org.example.attendanceai.domain.enums.SessionStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Data
@@ -39,8 +36,8 @@ public class Session {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "classroom_id")
-    Classroom classroom;
+    @JoinColumn(name = "group_id")
+    Group group;
 
     @NotNull
     @ManyToOne

@@ -46,6 +46,11 @@ public class Student {
     Major major;
 
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    Group group;
+
+    @NotNull
     @Column(unique = true)
     long cneId;
 

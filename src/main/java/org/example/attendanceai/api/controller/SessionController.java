@@ -22,6 +22,7 @@ public class SessionController {
     private final SessionService sessionService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<SessionResponse>> getAllSessions() {
         return ResponseEntity.ok(sessionService.findAll());
     }
@@ -34,14 +35,13 @@ public class SessionController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<SessionResponse> createSession(@Valid @RequestBody SessionRequest request) {
         SessionResponse response = sessionService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<SessionResponse> updateSession(
             @PathVariable long id,
             @Valid @RequestBody SessionRequest request) {

@@ -2,7 +2,6 @@ package org.example.attendanceai.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.example.attendanceai.api.request.SessionRequest;
-import org.example.attendanceai.api.response.PresenceResponse;
 import org.example.attendanceai.api.response.SessionResponse;
 import org.example.attendanceai.domain.entity.*;
 import org.example.attendanceai.domain.mapper.SessionMapper;
@@ -12,10 +11,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +23,7 @@ public class SessionServiceImpl implements SessionService {
     private final SessionMapper sessionMapper;
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
-    private final ClassroomRepository classroomRepository;
+    private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
 
@@ -39,7 +34,17 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Optional<SessionResponse> findById(long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Session session = sessionRepository.findById(id).orElseThrow(() -> new RuntimeException("Session not found"));
+        long sessionOwner = session.getSubject().getTeacher().getId();
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+        if(sessionOwner == user.getId() || isAdmin) {
         return Optional.of(sessionMapper.toResponse(sessionRepository.findById(id).orElseThrow(() -> new RuntimeException("Session Not Found"))));
+        } else {
+            throw new AccessDeniedException("Access denied");
+        }
     }
 
     @Override
@@ -75,10 +80,10 @@ public class SessionServiceImpl implements SessionService {
             session.setStatus(request.getStatus());
         }
 
-        if (request.getClassroomId() != null) {
-            Classroom classroom = classroomRepository.findById(request.getClassroomId())
+        if (request.getGroupId() != null) {
+            Group group = groupRepository.findById(request.getGroupId())
                     .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
-            session.setClassroom(classroom);
+            session.setGroup(group);
         }
 
         Session savedSession = sessionRepository.save(session);
@@ -136,10 +141,10 @@ public class SessionServiceImpl implements SessionService {
             session.setStatus(request.getStatus());
         }
 
-        if (request.getClassroomId() != null) {
-            Classroom classroom = classroomRepository.findById(request.getClassroomId())
+        if (request.getGroupId() != null) {
+            Group group = groupRepository.findById(request.getGroupId())
                     .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
-            session.setClassroom(classroom);
+            session.setGroup(group);
         }
 
         Session savedSession = sessionRepository.save(session);

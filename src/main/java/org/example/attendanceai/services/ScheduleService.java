@@ -17,4 +17,6 @@ public interface ScheduleService {
     void delete(Long id);
 
     void archive(Long id);
+
+    void unarchive(Long id);
 }

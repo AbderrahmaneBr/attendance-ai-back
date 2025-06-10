@@ -43,8 +43,8 @@ public class SessionRequest {
     @Schema(description = "Session's status id")
     private SessionStatus status = SessionStatus.NOT_FILLED;
 
-    @NotNull(message = "Classroom ID is required")
-    @Schema(description = "Session's Classroom id")
-    private Long classroomId;
+    @NotNull(message = "Group ID is required")
+    @Schema(description = "Session's Group id")
+    private Long groupId;
 
 }

@@ -25,6 +25,7 @@ public class MajorController {
     private final MajorService majorService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<MajorResponse>> getAllMajors() {
         return ResponseEntity.ok(majorService.findAll());
     }

@@ -9,11 +9,11 @@
 - make get user by id only for admins (ADD ADMIN PRIVILEGES)
 - make sure only teachers who have the right to mark presence are the one marking it
 - add marking presence endpoint (mark it as filled)
-- add check on study year classroom?
+- add check on study year group?
 - student update
 
 - cron jobs for schedule, session and presence
 - trigger for session
-- change classroom name to group (in session change classroom_id to group_id)
-- add classroom entity (add classroom_id to session)
-- add camera_id in classroom entity
+- change group name to group (in session change classroom_id to group_id)
+- add group entity (add classroom_id to session)
+- add camera_id in group entity

@@ -15,8 +15,9 @@ public interface StudentService {
     Optional<Student> archive(long id);
     Optional<Student> unarchive(long id);
     List<Student> findByMajorId(long majorId);
-    //Todo Arenommer a abdo cneId hssen
     Optional<Student> findByCneId(long cneId);
-//    List<Student> findByStudyYear(StudyYear studyYear);
+    List<Student> findByStudyYear(StudyYear studyYear);
+    List<Student> findByGroupId(StudyYear studyYear);
+
 //    List<Student> search(String name, Long majorId, StudyYear studyYear);
 }

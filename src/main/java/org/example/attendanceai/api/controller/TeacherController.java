@@ -29,6 +29,7 @@ public class TeacherController {
 
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<TeacherResponse>> getAllTeachers() {
         List<Teacher> teachers = teacherService.findAll();
         return ResponseEntity.ok(teacherMapper.toResponseTeachers(teachers));
@@ -51,7 +52,6 @@ public class TeacherController {
 //    }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherResponse> updateTeacher(
             @PathVariable long id, @Valid @RequestBody TeacherRequest requestTeacher) {
         return teacherService.update(id, requestTeacher)

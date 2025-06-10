@@ -25,8 +25,8 @@ public class SubjectController {
     @Autowired
     private final SubjectService subjectService;
 
-
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Subject>> getAllSubjects() {
         return ResponseEntity.ok(subjectService.findAll());
     }
@@ -37,7 +37,6 @@ public class SubjectController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-//todo a modifier apres ajout drs dto
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -85,6 +84,7 @@ public class SubjectController {
     }
 
     @GetMapping("/name/{name}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<Subject>> getSubjectsByName(@PathVariable String name) {
         List<Subject> subjects = subjectService.findByNameContaining(name);
         return ResponseEntity.ok(subjects);

@@ -14,6 +14,8 @@ import org.example.attendanceai.domain.repository.UserRepository;
 import org.example.attendanceai.services.SubjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,7 +133,6 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     @Transactional
     public boolean deleteById(long id) {
-        logger.debug("Deleting subject with id: {}", id);
 
         if (subjectRepository.existsById(id)) {
             subjectRepository.deleteById(id);
@@ -167,6 +168,19 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     @Transactional(readOnly = true)
     public List<Subject> findByTeacherId(long teacherId) {
+        // Find User
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check if user is ADMIN or owner of the record
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+        boolean isOwner = user.getId() == teacherId;
+
+        if (!isAdmin && !isOwner) {
+            throw new AccessDeniedException("You don't have permission.");
+        }
+
+
         logger.debug("Finding subjects by teacher id: {}", teacherId);
 
         return subjectRepository.findByTeacherId(teacherId);

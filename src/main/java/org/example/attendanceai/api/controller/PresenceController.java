@@ -29,6 +29,7 @@ public class PresenceController {
     private final PresenceService presenceService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<PresenceResponse>> getAllPresence() {
         return ResponseEntity.ok(presenceService.findAll());
     }
@@ -41,7 +42,7 @@ public class PresenceController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<PresenceResponse> createPresence(@Valid @RequestBody PresenceRequest request) {
         PresenceResponse response = presenceService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -95,7 +96,7 @@ public class PresenceController {
     }
 
     @PatchMapping("/{id}/archive")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<PresenceResponse> archivePresence(@PathVariable long id) {
         return presenceService.archive(id)
                 .map(ResponseEntity::ok)
@@ -103,7 +104,7 @@ public class PresenceController {
     }
 
     @PatchMapping("/{id}/unarchive")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<PresenceResponse> unarchivePresence(@PathVariable long id) {
         return presenceService.unarchive(id)
                 .map(ResponseEntity::ok)

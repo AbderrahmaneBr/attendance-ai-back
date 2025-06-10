@@ -1,6 +1,7 @@
 package org.example.attendanceai.domain.repository;
 
 import org.example.attendanceai.domain.entity.Student;
+import org.example.attendanceai.domain.enums.StudyYear;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,4 +14,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findByMajorId(@Param("majorId") Long majorId);
 
     Optional<Student> findByCneId(Long cneId);
+
+    List<Student> findByStudyYear(StudyYear studyYear);
+    List<Student> findByGroup_StudyYear(StudyYear studyYear);
 }

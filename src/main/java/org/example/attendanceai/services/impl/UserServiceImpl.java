@@ -31,13 +31,6 @@ public class UserServiceImpl implements UserService {
         this.teacherRepository = teacherRepository;
     }
 
-//Todo assk abdo if he has already add this into pom.xml
-
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
-
-
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
@@ -85,7 +78,7 @@ public class UserServiceImpl implements UserService {
         }
 
         List<User> matchingUsers = new ArrayList<>();
-//Todo a tester apres normalement c'est getAll
+
         List<User> allUsers = findAll();
 
         for (User user : allUsers) {
@@ -163,9 +156,5 @@ public Optional<User> findByEmail(String email){
 
         return Optional.of(user);
     }
-
-
-
-
 
 }
