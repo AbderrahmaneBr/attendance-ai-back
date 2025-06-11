@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "study_group")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +32,7 @@ public class Group {
     Department department;
 
     @NotNull
-    String study_year;
+    String studyYear;
 
     @Builder.Default
     Boolean archived = false;

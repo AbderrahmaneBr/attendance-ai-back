@@ -131,7 +131,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findByStudyYear(StudyYear studyYear) {
-        return studentRepository.findByStudyYear(studyYear);
+        return studentRepository.findByGroup_StudyYear(studyYear);
     }
 
     @Override

@@ -84,11 +84,5 @@ public class MajorController {
         Optional<MajorResponse> response = majorService.findByDepartmentId(departmentId);
         return ResponseEntity.ok(response);
     }
-//
-//    @GetMapping("/chief/{chiefId}")
-//    public ResponseEntity<Major> getMajorByChiefId(@PathVariable long chiefId) {
-//        return majorService.findByChiefId(chiefId)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+
 }

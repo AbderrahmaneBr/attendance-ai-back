@@ -23,10 +23,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-//    @GetMapping
-//    public ResponseEntity<String> getUser() {
-//        return ResponseEntity.ok("Test test");
-//    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -41,24 +37,6 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-//    @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public ResponseEntity<User> createUser(@Valid @RequestBody UserRequest userDTO) {
-//        User user = userService.save(userDTO);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(user);
-//    }
-//
-//
-//    @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
-//    public ResponseEntity<User> updateUser(
-//            @PathVariable long id,
-//            @Valid @RequestBody UserRequest userDTO) {
-//        return userService.update(id, userDTO)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

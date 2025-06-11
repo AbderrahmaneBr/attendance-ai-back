@@ -83,14 +83,5 @@ public class DepartmentController {
                         .map(ResponseEntity::ok)
                         .orElse(ResponseEntity.notFound().build());
         }
-//
-//        @GetMapping("/chief/{chiefId}")
-//        public ResponseEntity<Department> getDepartmentByChiefId(@PathVariable long chiefId) {
-//                return departmentService.findByChiefId(chiefId)
-        // TODO: add finfbycheifId in services
-        
-//                        .map(ResponseEntity::ok)
-//                        .orElse(ResponseEntity.notFound().build());
-//        }
 
 }

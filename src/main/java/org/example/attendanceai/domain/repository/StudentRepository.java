@@ -15,6 +15,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findByCneId(Long cneId);
 
-    List<Student> findByStudyYear(StudyYear studyYear);
     List<Student> findByGroup_StudyYear(StudyYear studyYear);
 }

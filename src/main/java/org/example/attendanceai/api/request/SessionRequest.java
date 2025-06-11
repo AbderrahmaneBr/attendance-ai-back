@@ -19,17 +19,6 @@ import java.time.LocalTime;
 @Data
 public class SessionRequest {
 
-//    @JsonFormat(pattern = "dd-MM-yyyy")
-//    @Schema(description = "Session date 'dd-MM-yyyy' format")
-//    private LocalDate date;
-
-//    @JsonFormat(pattern = "HH:mm")
-//    @Schema(description = "Session start hour 'HH:mm' format")
-//    private LocalTime startHour;
-//
-//    @JsonFormat(pattern = "HH:mm")
-//    @Schema(description = "Session end hour 'HH:mm' format")
-//    private LocalTime endHour;
 
     @NotNull(message = "Subject ID is required")
     @Schema(description = "Session's Subject id")

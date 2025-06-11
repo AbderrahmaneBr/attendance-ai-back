@@ -69,22 +69,5 @@ public class TeacherController {
         return ResponseEntity.notFound().build();
     }
 
-//    @GetMapping("/subjects")
-//    public ResponseEntity<List<TeacherResponse>> getTeachersWithSubjects() {
-//        List<Teacher> teachers = teacherService.findAllWithSubjects();
-//        return ResponseEntity.ok(teacherMapper.toResponseTeachers(teachers));
-//    }
-
-//    @GetMapping("/current")
-//    public ResponseEntity<TeacherResponse> getCurrentTeacher(@RequestAttribute("id") Long userId) {
-//        return teacherService.findByUserId(userId)
-//                .map(teacherMapper::toResponse)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-
-
-
-
 
 }

@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/classrooms")
+@RequestMapping("/api/v1/groups")
 @AllArgsConstructor
-@Tag(name = "Classroom", description = "Operations related to classroom")
+@Tag(name = "Group", description = "Operations related to group")
 public class GroupController {
 
     private final GroupService groupService;
 
     @GetMapping
-    public ResponseEntity<List<GroupResponse>> getAllClassrooms() {
+    public ResponseEntity<List<GroupResponse>> getAllGroups() {
         return ResponseEntity.ok(groupService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GroupResponse> getClassroomById(@PathVariable long id) {
+    public ResponseEntity<GroupResponse> getGroupById(@PathVariable long id) {
         return groupService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -35,14 +35,14 @@ public class GroupController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<GroupResponse> createClassroom(@Valid @RequestBody GroupRequest request) {
+    public ResponseEntity<GroupResponse> createGroup(@Valid @RequestBody GroupRequest request) {
         GroupResponse response = groupService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<GroupResponse> updateClassroom(
+    public ResponseEntity<GroupResponse> updateGroup(
             @PathVariable long id,
             @Valid @RequestBody GroupRequest request) {
         return groupService.update(id, request)
@@ -52,7 +52,7 @@ public class GroupController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<Void> deleteClassroom(@PathVariable long id) {
+    public ResponseEntity<Void> deleteGroup(@PathVariable long id) {
         if (groupService.deleteById(id)) {
             return ResponseEntity.noContent().build();
         }
@@ -61,7 +61,7 @@ public class GroupController {
 
     @PatchMapping("/{id}/archive")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<GroupResponse> archiveClassroom(@PathVariable long id) {
+    public ResponseEntity<GroupResponse> archiveGroup(@PathVariable long id) {
         return groupService.archive(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -69,7 +69,7 @@ public class GroupController {
 
     @PatchMapping("/{id}/unarchive")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<GroupResponse> unarchiveClassroom(@PathVariable long id) {
+    public ResponseEntity<GroupResponse> unarchiveGroup(@PathVariable long id) {
         return groupService.unarchive(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
