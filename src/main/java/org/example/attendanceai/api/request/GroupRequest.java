@@ -2,10 +2,13 @@ package org.example.attendanceai.api.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.example.attendanceai.domain.enums.StudyYear;
 
 @Data
 public class GroupRequest {
@@ -15,7 +18,9 @@ public class GroupRequest {
     String name;
 
     @NotBlank(message = "Group study year is required")
-    String study_year;
+    @Enumerated(EnumType.STRING)
+    @Schema(description = "Group study year 'FIRST, SECOND, THIRD, FOURTH, FIFTH'")
+    StudyYear study_year;
 
     @NotNull(message = "Department ID is required")
     @Schema(description = "Group's department id")
