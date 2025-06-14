@@ -1,0 +1,82 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql:8.0
+    container_name: attendance-ai-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: attendance_ai_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 7000:80
+    environment:
+      PMA_HOST: mysql_db
+      PMA_USER: admin
+      PMA_PASSWORD: admin
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+
+  attendance_app:
+    #build:
+
+      #context: . # Build from current directory (where Dockerfile is)
+      #dockerfile: Dockerfile
+    image: abderrahmanebr/attendance-ai-backend:1.0
+    container_name: attendance-ai-app
+    ports:
+      - "8080:8080"
+    environment: # Pass environment variables to your Spring Boot app
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/attendance_ai_db?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      # === MinIO Environment Variables for Spring Boot App ===
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_NAME: attendance-ai-bucket
+    depends_on:
+      mysql_db:
+        condition: service_healthy # Wait for mysql_db to be healthy before starting
+      minio: # Add dependency on MinIO service
+        condition: service_healthy # Wait for MinIO to be healthy
+
+  minio: # New service for MinIO
+    image: minio/minio:latest # Use the latest MinIO image
+    container_name: attendance-ai-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+
+    ports:
+      - "9000:9000" # MinIO API port (for S3 client)
+      - "9001:9001" # MinIO Console port (for browser UI)
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data # Persist MinIO data
+    healthcheck: # Health check to ensure MinIO is ready
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  mysql_data: # Define the named volume for MySQL data persistence
+  minio_data: # Define the named volume for MinIO data persistence

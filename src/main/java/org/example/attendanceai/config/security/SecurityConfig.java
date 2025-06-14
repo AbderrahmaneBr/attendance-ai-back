@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",         // Swagger static resources
                                 "/swagger-ui.html"       // Swagger UI HTML
                         ).permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register", "/api/v1/auth/authenticate")
                         .permitAll()

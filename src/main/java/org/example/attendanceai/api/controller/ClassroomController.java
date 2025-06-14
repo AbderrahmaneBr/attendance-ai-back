@@ -1,5 +1,6 @@
 package org.example.attendanceai.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.attendanceai.api.request.ClassroomRequest;
 import org.example.attendanceai.api.response.ClassroomResponse;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/classrooms")
 @RequiredArgsConstructor
+@Tag(name = "Classroom", description = "Operations related to classroom")
 public class ClassroomController {
 
     private final ClassroomService classroomService;
