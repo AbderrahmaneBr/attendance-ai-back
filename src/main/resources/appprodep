@@ -22,7 +22,6 @@ spring.profiles.active=dev
 
 spring.application.name=attendance-ai
 server.port=8086
-#spring.datasource.url=jdbc:h2:mem:patients-db
 #spring.h2.console.enabled=true
 
 logging.level.org.springframework.security=DEBUG

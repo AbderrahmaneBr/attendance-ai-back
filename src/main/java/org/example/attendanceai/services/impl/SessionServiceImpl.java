@@ -26,6 +26,7 @@ public class SessionServiceImpl implements SessionService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
+    private final ClassroomRepository classroomRepository;
 
     @Override
     public List<SessionResponse> findAll() {
@@ -52,17 +53,29 @@ public class SessionServiceImpl implements SessionService {
 
         Session session = new Session();
 
-//        if (request.getDate() != null) {
-//            session.setDate(request.getDate());
-//        }
-//
-//        if (request.getStartHour() != null) {
-//            session.setStartHour(request.getStartHour());
-//        }
-//
-//        if (request.getEndHour() != null) {
-//            session.setEndHour(request.getEndHour());
-//        }
+        if (request.getDate() != null) {
+            session.setDate(request.getDate());
+        }
+
+        if (request.getStartHour() != null) {
+            session.setStartHour(request.getStartHour());
+        }
+
+        if (request.getEndHour() != null) {
+            session.setEndHour(request.getEndHour());
+        }
+
+        if (request.getGroupId() != null) {
+            Group group = groupRepository.findById(request.getGroupId())
+                    .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+            session.setGroup(group);
+        }
+
+        if (request.getClassroomId() != null) {
+            Classroom classroom = classroomRepository.findById(request.getClassroomId())
+                    .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+            session.setClassroom(classroom);
+        }
 
         if (request.getSubjectId() != null) {
             Subject subject = subjectRepository.findById(request.getSubjectId())
@@ -113,17 +126,29 @@ public class SessionServiceImpl implements SessionService {
         Session session = sessionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
-//        if (request.getDate() != null) {
-//            session.setDate(request.getDate());
-//        }
-//
-//        if (request.getStartHour() != null) {
-//            session.setStartHour(request.getStartHour());
-//        }
-//
-//        if (request.getEndHour() != null) {
-//            session.setEndHour(request.getEndHour());
-//        }
+        if (request.getDate() != null) {
+            session.setDate(request.getDate());
+        }
+
+        if (request.getStartHour() != null) {
+            session.setStartHour(request.getStartHour());
+        }
+
+        if (request.getEndHour() != null) {
+            session.setEndHour(request.getEndHour());
+        }
+
+        if (request.getGroupId() != null) {
+            Group group = groupRepository.findById(request.getGroupId())
+                    .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+            session.setGroup(group);
+        }
+
+        if (request.getClassroomId() != null) {
+            Classroom classroom = classroomRepository.findById(request.getClassroomId())
+                    .orElseThrow(() -> new IllegalArgumentException("Classroom not found"));
+            session.setClassroom(classroom);
+        }
 
         if (request.getSubjectId() != null) {
             Subject subject = subjectRepository.findById(request.getSubjectId())

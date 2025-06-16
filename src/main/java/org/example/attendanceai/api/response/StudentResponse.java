@@ -15,7 +15,7 @@ public class StudentResponse {
     private String email;
     private String phone;
     private String address;
-    private String profileImg;
+    private String profile_img;
     private MajorResponse major;
     private String cne_id;
     private String study_year;

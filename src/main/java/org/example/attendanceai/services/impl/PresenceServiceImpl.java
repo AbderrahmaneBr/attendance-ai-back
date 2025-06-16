@@ -1,27 +1,25 @@
 package org.example.attendanceai.services.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.example.attendanceai.api.request.PresenceRequest;
-import org.example.attendanceai.api.response.MajorResponse;
 import org.example.attendanceai.api.response.PresenceResponse;
+import org.example.attendanceai.api.request.facedetection.LaunchResultRequest;
 import org.example.attendanceai.config.security.JwtService;
 import org.example.attendanceai.domain.entity.*;
 import org.example.attendanceai.domain.enums.PresenceStatus;
+import org.example.attendanceai.domain.enums.SessionStatus;
 import org.example.attendanceai.domain.mapper.PresenceMapper;
 import org.example.attendanceai.domain.repository.PresenceRepository;
 import org.example.attendanceai.domain.repository.SessionRepository;
 import org.example.attendanceai.domain.repository.StudentRepository;
 import org.example.attendanceai.domain.repository.UserRepository;
 import org.example.attendanceai.services.PresenceService;
-import org.example.attendanceai.services.auth.AuthContextService;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -192,5 +190,56 @@ public class PresenceServiceImpl implements PresenceService {
         presenceQuery.setArchived(false);
         Presence savedPresence = presenceRepository.save(presenceQuery);
         return Optional.of(presenceMapper.toResponse(savedPresence));
+    }
+
+    @Transactional
+    @Override
+    public Mono<Void> processMLPresenceResult(LaunchResultRequest mlResponse) {
+        // 1. Find the target Session
+        return Mono.fromCallable(() -> sessionRepository.findById(Long.parseLong(mlResponse.getSession_id())))
+                .flatMap(sessionOptional -> {
+                    if (sessionOptional.isEmpty()) {
+                        return Mono.error(new IllegalArgumentException("Session with ID " + mlResponse.getSession_id() + " not found. Cannot process presence."));
+                    }
+                    Session session = sessionOptional.get();
+
+                    // 2. Process each student's presence from the ML response
+                    List<Mono<Presence>> presenceSaveMonos = mlResponse.getOutput().stream()
+                            .map((mlPresenceDTO) -> {
+                                // Find student by name (assuming name is unique or you have a strategy for duplicates)
+                                return Mono.fromCallable(() -> studentRepository.findById(Long.parseLong(mlPresenceDTO.getStudent_id())))
+                                        .flatMap(studentOptional -> {
+                                            if (studentOptional.isEmpty()) {
+                                                System.err.println("Student with ID " + mlPresenceDTO.getStudent_id() + " not found. Skipping presence record.");
+                                                return Mono.empty(); // Skip this student if not found
+                                            }
+                                            Student student = studentOptional.get();
+
+                                            // Create new Presence entity
+                                            Presence presence = Presence.builder()
+                                                    .session(session)
+                                                    .student(student)
+                                                    .status(mlPresenceDTO.getPresent() ? PresenceStatus.PRESENT : PresenceStatus.ABSENT)
+                                                    .build();
+                                            // Save the Presence entity
+                                            return Mono.fromCallable(() -> presenceRepository.save(presence));
+                                        })
+                                        .onErrorResume(e -> {
+                                            System.err.println("Error processing presence for student " + mlPresenceDTO.getStudent_id() + ": " + e.getMessage());
+                                            return Mono.empty(); // Continue processing other students even if one fails
+                                        });
+                            })
+                            .toList();
+
+                    // 3. Wait for all presence saves to complete, then update session status
+                    return Mono.when(presenceSaveMonos) // Combine all Mono<Presence> into a single Mono<Void>
+                            .then(Mono.fromRunnable(() -> {
+                                session.setStatus(SessionStatus.COMPLETED);
+                                sessionRepository.save(session); // Save updated session status
+                                System.out.println("Session " + mlResponse.getSession_id() + " status updated to COMPLETED.");
+                            }));
+                })
+                .doOnError(e -> System.err.println("Failed to process ML presence result for session " + mlResponse.getSession_id() + ": " + e.getMessage()))
+                .then(); // Return Mono<Void>
     }
 }

@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register", "/api/v1/auth/authenticate")
                         .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/facedetection/start", "/api/v1/facedetection/save").permitAll()
                         .requestMatchers("/api/v1/auth/**")
                         .permitAll()
                         .anyRequest()

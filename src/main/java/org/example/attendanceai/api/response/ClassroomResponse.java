@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class ClassroomResponse {
     Long id;
     String name;
-    Long cameraId;
+    Long camera_id;
     Boolean archived;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

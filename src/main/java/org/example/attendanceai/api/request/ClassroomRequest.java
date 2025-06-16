@@ -15,6 +15,6 @@ public class ClassroomRequest {
     String name;
 
     @Nullable
-    Long cameraId;
+    Long camera_id;
 }
 

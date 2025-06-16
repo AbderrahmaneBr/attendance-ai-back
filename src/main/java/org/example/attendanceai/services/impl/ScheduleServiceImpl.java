@@ -4,8 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.attendanceai.api.request.ScheduleRequest;
 import org.example.attendanceai.api.response.ScheduleResponse;
+import org.example.attendanceai.domain.entity.Group;
 import org.example.attendanceai.domain.entity.Schedule;
+import org.example.attendanceai.domain.entity.Subject;
 import org.example.attendanceai.domain.mapper.ScheduleMapper;
+import org.example.attendanceai.domain.repository.GroupRepository;
 import org.example.attendanceai.domain.repository.ScheduleRepository;
 import org.example.attendanceai.services.ScheduleService;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,17 @@ import java.util.stream.Collectors;
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleMapper scheduleMapper;
+    private final GroupRepository groupRepository;
 
     @Override
     public ScheduleResponse create(ScheduleRequest request) {
         Schedule schedule = scheduleMapper.toEntity(request);
+
+        if (request.getGroupId() != null) {
+            Group group = groupRepository.findById(request.getGroupId())
+                    .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+            schedule.setGroup(group);
+        }
 
         if(request.getDetails() != null) {
             schedule.setDetails(request.getDetails());
@@ -37,6 +47,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + id));
 
         Schedule updated = scheduleMapper.toEntity(request);
+        if (request.getGroupId() != null) {
+            Group group = groupRepository.findById(request.getGroupId())
+                    .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+            updated.setGroup(group);
+        }
         updated.setId(id);
         updated.setCreatedAt(existing.getCreatedAt()); // preserve original creation time
 

@@ -68,8 +68,8 @@ public class ClassroomServiceImpl implements ClassroomService {
                 existingClassroom.setName(request.getName());
             }
 
-            if (request.getCameraId() != null) {
-                existingClassroom.setCamera_id(request.getCameraId());
+            if (request.getCamera_id() != null) {
+                existingClassroom.setCamera_id(request.getCamera_id());
             }
 
             Classroom updatedClassroom = classroomRepository.save(existingClassroom);

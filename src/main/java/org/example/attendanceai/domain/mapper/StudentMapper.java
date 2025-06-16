@@ -8,10 +8,24 @@ import org.example.attendanceai.domain.entity.Student;
 import org.example.attendanceai.domain.entity.Subject;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {GroupMapper.class, MajorMapper.class})
 public interface StudentMapper {
-    StudentResponse toResponse(Student student);
-    Student toEntity(StudentResponse response);
-    Student toEntity(StudentRequest request);
-}
 
+    @Mapping(target = "group", ignore = true)
+    @Mapping(target = "major", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(source = "profile_img", target = "profile_img")
+    Student toEntity(StudentRequest request);
+
+    @Mapping(target = "group", ignore = true)
+    @Mapping(target = "major", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(source = "profile_img", target = "profile_img")
+    void updateStudentFromRequest(StudentRequest request, @MappingTarget Student student);
+
+    StudentResponse toResponse(Student student);
+}

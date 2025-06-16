@@ -17,10 +17,10 @@ public class GroupRequest {
     @Schema(description = "Group name")
     String name;
 
-    @NotBlank(message = "Group study year is required")
+    @NotNull(message = "Group study year is required")
     @Enumerated(EnumType.STRING)
     @Schema(description = "Group study year 'FIRST, SECOND, THIRD, FOURTH, FIFTH'")
-    StudyYear study_year;
+    StudyYear studyYear;
 
     @NotNull(message = "Department ID is required")
     @Schema(description = "Group's department id")

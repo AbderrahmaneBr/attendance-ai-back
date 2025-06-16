@@ -20,6 +20,10 @@ public class ScheduleRequest {
     @Schema(description = "Schedule name")
     String name;
 
+    @NotNull(message = "Group ID is required")
+    @Schema(description = "Concerned Group id")
+    private Long groupId;
+
     @NotNull(message = "Schedule details are required")
     @Schema(description = "Structured schedule details as JSON")
     private ScheduleDetails details;

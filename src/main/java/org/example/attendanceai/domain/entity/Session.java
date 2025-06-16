@@ -10,7 +10,9 @@ import org.example.attendanceai.domain.enums.SessionStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -22,12 +24,12 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-//    @NotNull
-//    LocalDate date;
-//    @NotNull
-//    LocalTime startHour;
-//    @NotNull
-//    LocalTime endHour;
+    @NotNull
+    LocalDate date;
+    @NotNull
+    LocalTime startHour;
+    @NotNull
+    LocalTime endHour;
 
     @NotNull
     @ManyToOne
@@ -41,10 +43,17 @@ public class Session {
 
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "classroom_id")
+    Classroom classroom;
+
+    @NotNull
+    @ManyToOne
     @JoinColumn(name = "schedule_id")
     Schedule schedule;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
+    @Column(name = "status", nullable = false)
     SessionStatus status;
 
     @Builder.Default

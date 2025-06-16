@@ -33,7 +33,7 @@ public class StudentRequest {
 
     @NotBlank(message = "Profile image URL/path is required")
     @Schema(description = "URL or path to student's profile image")
-    private String profileImg;
+    private String profile_img;
 
     @NotNull(message = "Major ID is required")
     @Schema(description = "ID of the student's major")
@@ -45,5 +45,5 @@ public class StudentRequest {
 
     @NotNull(message = "CNE ID is required")
     @Schema(description = "Unique CNE ID")
-    private Long cneId;
+    private String cneId;
 }

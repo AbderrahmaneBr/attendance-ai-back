@@ -2,8 +2,9 @@ package org.example.attendanceai.services;
 
 import org.example.attendanceai.api.request.PresenceRequest;
 import org.example.attendanceai.api.response.PresenceResponse;
-import org.example.attendanceai.domain.entity.Presence;
+import org.example.attendanceai.api.request.facedetection.LaunchResultRequest;
 import org.example.attendanceai.domain.enums.PresenceStatus;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,5 +18,8 @@ public interface PresenceService {
     boolean deleteById(long id);
     Optional<PresenceResponse> archive(long id);
     Optional<PresenceResponse> unarchive(long id);
+
+    Mono<Void> processMLPresenceResult(LaunchResultRequest mlResponse);
+
 }
 

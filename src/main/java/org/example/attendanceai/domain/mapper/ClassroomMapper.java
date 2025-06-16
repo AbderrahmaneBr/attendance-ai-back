@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ClassroomMapper {
-    ClassroomResponse toResponse(Classroom group);
+    ClassroomResponse toResponse(Classroom classroom);
     Classroom toEntity(ClassroomResponse response);
     Classroom toEntity(ClassroomRequest request);
 }

@@ -20,6 +20,7 @@ public class SessionResponse {
     LocalTime endHour;
     SubjectResponse subject;
     TeacherResponse teacher;
+    ScheduleResponse schedule;
     GroupResponse group;
     Boolean archived;
     LocalDateTime createdAt;

@@ -37,6 +37,11 @@ public class Schedule {
     @Builder.Default
     List<Session> sessions = new ArrayList<>();
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    Group group;
+
     @Builder.Default
     Boolean archived = false;
 

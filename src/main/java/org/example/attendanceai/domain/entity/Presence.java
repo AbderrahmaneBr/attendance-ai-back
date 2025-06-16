@@ -39,6 +39,7 @@ public class Presence {
 
     @NotNull
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     PresenceStatus status = PresenceStatus.EMPTY;
 
     @Builder.Default

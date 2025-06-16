@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.attendanceai.domain.enums.StudyYear;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -32,7 +33,8 @@ public class Group {
     Department department;
 
     @NotNull
-    String studyYear;
+    @Enumerated(EnumType.STRING)
+    StudyYear studyYear;
 
     @Builder.Default
     Boolean archived = false;

@@ -52,7 +52,7 @@ public class Student {
 
     @NotNull
     @Column(unique = true)
-    long cneId;
+    String cneId;
 
     @Builder.Default
     Boolean archived = false;
