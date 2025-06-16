@@ -3,6 +3,7 @@ package org.example.attendanceai.api.controller.auth;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,5 +33,17 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request
     ) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+
+    @PostMapping("/validate-token")
+    public ResponseEntity<Void> validateToken(
+            @RequestBody TokenValidationRequest request
+    ) {
+        boolean isValid = authenticationService.validateToken(request.getToken());
+        if (isValid) {
+            return ResponseEntity.ok().build(); // 200 OK
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401 Unauthorized
+        }
     }
 }

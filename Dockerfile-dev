@@ -1,0 +1,49 @@
+# Dockerfile-dev
+# This Dockerfile is optimized for development with Docker volumes and DevTools.
+
+# === BUILD STAGE ===
+# This stage will build a full Spring Boot fat JAR.
+# The purpose here is to create a valid, runnable base JAR that
+# includes the Spring Boot loader and all dependencies.
+# Your actual application code changes will be overlaid by volumes.
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build_dev
+
+# Set the working directory inside the build stage
+WORKDIR /app
+
+# Copy the pom.xml file first to leverage Docker's caching
+COPY pom.xml .
+
+# Download dependencies (only if pom.xml changes).
+# This creates a cached layer for dependencies.
+RUN mvn dependency:go-offline -B
+
+# Copy the entire source code for the build stage to produce a full JAR
+COPY src ./src
+
+# Package the Spring Boot application. This generates the fat JAR.
+RUN mvn clean package -DskipTests
+
+# === RUNTIME STAGE ===
+# Use the same base JRE as your production setup for consistency
+FROM eclipse-temurin:17-jre-focal
+
+# Set the working directory for the runtime container
+WORKDIR /app
+
+# Expose the port your Spring Boot app listens on
+EXPOSE 8080
+
+# Create the BOOT-INF/classes directory.
+# This directory will be the target for the volume mount from your host's target/classes.
+# When the container starts, this empty directory will be 'overlaid' by your local build output.
+RUN mkdir -p BOOT-INF/classes
+
+# Copy the built JAR from the 'build_dev' stage.
+# This JAR contains the Spring Boot launcher and all dependencies.
+# Your application's compiled classes from your local machine will be mounted
+# into BOOT-INF/classes, allowing DevTools to detect changes.
+COPY --from=build_dev /app/target/*.jar /app/app.jar
+
+# Define the entry point for the container to run the application JAR
+ENTRYPOINT ["java","-jar","/app/app.jar"]

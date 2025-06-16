@@ -106,7 +106,7 @@ public class CameraTriggerJob {
                         String.valueOf(session.getClassroom().getCamera_id()), // Convert Long to String
                         studentResponses,
                         String.valueOf(session.getId()), // Convert Long to String
-                        300 // Duration in seconds (5 minutes)
+                        500 // Duration in seconds
                 );
 
                 // Send the signal asynchronously using Mono
