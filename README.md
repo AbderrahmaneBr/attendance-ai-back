@@ -34,3 +34,6 @@ http://localhost:8086/swagger-ui/index.html#
 
 ## System Design
 ![System Design](imgs/system_design.jpg)
+
+# CI/CD Pipeline
+![System Design](imgs/CICD_pipeline.jpg)
